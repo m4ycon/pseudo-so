@@ -1,2 +1,6 @@
+# Files
 so.*
-.vscode
+
+# Directories
+/.vscode
+/tmp
