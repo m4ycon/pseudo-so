@@ -1,10 +1,20 @@
 #include "../include/utils.h"
 
-void Utils::sleep(double seconds)
-{
-  printd("Utils::sleep()");
-  Sleep(seconds * 1e3); // milliseconds
-}
+#ifdef _WIN32
+  #include <windows.h> // Windows
+  void Utils::sleep(double seconds)
+  {
+    printd("Utils::sleep()");
+    Sleep(seconds * 1e3); // milliseconds
+  }
+#else
+  #include <unistd.h> // Linux
+  void Utils::sleep(double seconds)
+  {
+    printd("Utils::sleep()");
+    usleep(seconds * 1e6); // microseconds
+  }
+#endif
 
 double Utils::randomDouble(double min, double max)
 {

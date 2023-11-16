@@ -3,7 +3,7 @@
 
 Process::Process(int PID, int processPriority, int memoryOffset, int memorySize)
 {
-  printd("Process::Process()");
+  printd("Process::Process(); PID: " + std::to_string(PID));
   this->PID = PID;
   this->processPriority = processPriority;
   this->memoryOffset = memoryOffset;
