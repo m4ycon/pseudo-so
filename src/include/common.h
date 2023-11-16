@@ -5,6 +5,5 @@
 #include <random>
 #include <string>
 
-using namespace std;
-
-void print(const string& message);
+void print(const std::string& message);
+void printd(const std::string& message);

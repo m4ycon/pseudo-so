@@ -2,5 +2,5 @@
 
 ResourceManager::ResourceManager()
 {
-  print("ResourceManager::ResourceManager()");
+  printd("ResourceManager::ResourceManager()");
 }

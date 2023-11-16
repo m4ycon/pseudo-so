@@ -7,5 +7,7 @@ all:
 	g++ $(FLAGS) $(FILES) ./src/main.cpp -o $(TARGET)
 run:
 	./$(TARGET)
+debug:
+	./$(TARGET) -d
 clear:
 	rm -f $(TARGET)

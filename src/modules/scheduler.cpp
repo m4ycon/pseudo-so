@@ -2,5 +2,5 @@
 
 Scheduler::Scheduler()
 {
-  print("Scheduler::Scheduler()");
+  printd("Scheduler::Scheduler()");
 }

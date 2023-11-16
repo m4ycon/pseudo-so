@@ -2,5 +2,5 @@
 
 FileManager::FileManager()
 {
-  print("FileManager::FileManager()");
+  printd("FileManager::FileManager()");
 }

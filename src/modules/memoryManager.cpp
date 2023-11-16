@@ -2,5 +2,5 @@
 
 MemoryManager::MemoryManager()
 {
-  print("MemoryManager::MemoryManager()");
+  printd("MemoryManager::MemoryManager()");
 }

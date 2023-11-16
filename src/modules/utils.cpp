@@ -1,15 +1,16 @@
 #include "../include/utils.h"
 
-void Utils::sleep(int time)
+void Utils::sleep(double seconds)
 {
-  print("Utils::sleep()");
+  printd("Utils::sleep()");
+  Sleep(seconds * 1e3); // milliseconds
 }
 
 double Utils::randomDouble(double min, double max)
 {
-  random_device rd;  // Create a random device
-	mt19937 gen(rd());  // Create a Mersenne Twister pseudo-random number generator
-	uniform_real_distribution<> dis(min, max);
+  std::random_device rd;  // Create a random device
+  std::mt19937 gen(rd()); // Create a Mersenne Twister pseudo-random number generator
+  std::uniform_real_distribution<> dis(min, max);
 
-	return dis(gen);
+  return dis(gen);
 }
