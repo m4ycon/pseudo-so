@@ -1,5 +1,4 @@
 #include "../include/process.h"
-#include "../include/utils.h"
 
 Process::Process(int PID, int processPriority, int memoryOffset, int memorySize)
 {

@@ -4,6 +4,4 @@
 #include <mutex>
 #include <random>
 #include <string>
-
-void print(const std::string& message);
-void printd(const std::string& message);
+#include "./utils.h"
