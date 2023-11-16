@@ -1,7 +1,10 @@
 #pragma once
 #include <iostream>
+#include <thread>
+#include <mutex>
+#include <random>
+#include <string>
 
 using namespace std;
 
-extern bool DEBUG;
-#define DCOUT if (DEBUG) std::cout << "DEBUG: "
+void print(const string& message);

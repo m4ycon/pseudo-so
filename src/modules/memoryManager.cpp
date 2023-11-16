@@ -2,5 +2,5 @@
 
 MemoryManager::MemoryManager()
 {
-  DCOUT << "MemoryManager::MemoryManager()" << endl;
+  print("MemoryManager::MemoryManager()");
 }

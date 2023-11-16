@@ -2,5 +2,5 @@
 
 Scheduler::Scheduler()
 {
-  DCOUT << "Scheduler::Scheduler()" << endl;
+  print("Scheduler::Scheduler()");
 }

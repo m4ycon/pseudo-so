@@ -2,5 +2,5 @@
 
 FileManager::FileManager()
 {
-  DCOUT << "FileManager::FileManager()" << endl;
+  print("FileManager::FileManager()");
 }

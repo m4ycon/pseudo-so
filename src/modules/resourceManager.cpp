@@ -2,5 +2,5 @@
 
 ResourceManager::ResourceManager()
 {
-  DCOUT << "ResourceManager::ResourceManager()" << endl;
+  print("ResourceManager::ResourceManager()");
 }
