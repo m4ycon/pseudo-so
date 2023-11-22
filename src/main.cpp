@@ -19,21 +19,38 @@ int main(int argc, char const *argv[]) {
   }
 
   // auto memoryManager = new MemoryManager();
-  // auto scheduler = new Scheduler();
+  auto scheduler = new Scheduler();
   // auto resourceManager = new ResourceManager();
   // auto fileManager = new FileManager();
-  
-  auto process1 = new Process(1, 0, 0, 0);
-  auto process2 = new Process(2, 0, 0, 0);
-  auto process3 = new Process(3, 0, 0, 0);
 
-  std::thread t1 = std::thread(&Process::run, process1);
-  std::thread t2 = std::thread(&Process::run, process2);
-  std::thread t3 = std::thread(&Process::run, process3);
+  for (int i = 0; i < 10000; i++) {
+    auto process = new Process(i, Utils::randomDouble(5, 1000), 0, 0);
+    scheduler->addProcess(process);
+  }
 
-  t1.join();
-  t2.join();
-  t3.join();
+  print("realtimeQueue: " + to_string(scheduler->realtimeQueue.size()));
+  print("userQueue1: " + to_string(scheduler->userQueue1.size()));
+  print("userQueue2: " + to_string(scheduler->userQueue2.size()));
+  print("userQueue3: " + to_string(scheduler->userQueue3.size()));
+
+  auto p = scheduler->removeProcess();
+  print("PID: " + to_string(p->getPID()) + "; priority: " + to_string(p->getProcessPriority()));
+  p = scheduler->removeProcess();
+  print("PID: " + to_string(p->getPID()) + "; priority: " + to_string(p->getProcessPriority()));
+
+  print("realtimeQueue: " + to_string(scheduler->realtimeQueue.size()));
+  print("userQueue1: " + to_string(scheduler->userQueue1.size()));
+  print("userQueue2: " + to_string(scheduler->userQueue2.size()));
+  print("userQueue3: " + to_string(scheduler->userQueue3.size()));
+
+
+  // std::thread t1 = std::thread(&Process::run, process1);
+  // std::thread t2 = std::thread(&Process::run, process2);
+  // std::thread t3 = std::thread(&Process::run, process3);
+
+  // t1.join();
+  // t2.join();
+  // t3.join();
 
   return 0;
 }
