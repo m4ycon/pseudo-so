@@ -1,12 +1,16 @@
 #include "../include/process.h"
 
-Process::Process(int PID, int processPriority, int memoryOffset, int memorySize)
+Process::Process(int startup_time, int priority, int processor_time, int memory_blocks, bool printer_code_requested, bool scanner_request, bool modem_request, int disk_code)
 {
-  printd("Process::Process(); PID: " + to_string(PID));
-  this->PID = PID;
-  this->processPriority = processPriority;
-  this->memoryOffset = memoryOffset;
-  this->memorySize = memorySize;
+  this->PID = 0;
+  this->priority = priority;
+  this->startup_time = startup_time;
+  this->processor_time = processor_time;
+  this->memory_blocks = memory_blocks;
+  this->printer_code_requested = printer_code_requested;
+  this->scanner_request = scanner_request;
+  this->modem_request = modem_request;
+  this->disk_code = disk_code;
 }
 
 void Process::run()

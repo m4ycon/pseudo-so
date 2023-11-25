@@ -4,6 +4,7 @@
 #include "./include/resourceManager.h"
 #include "./include/fileManager.h"
 #include "./include/process.h"
+#include "./include/fileReader.h"
 
 extern bool DEBUG;
 
@@ -18,13 +19,23 @@ int main(int argc, char const *argv[]) {
     // espaço para mais flags se necessário
   }
 
+  auto fileReader = new FileReader();
+  auto processes = fileReader->readProcesses("./input/processes.txt");
+  for (auto process : processes) {
+    print("PID: " + to_string(process->getPID()) + "; priority: " + to_string(process->getProcessPriority()));
+  }
+
+  return 0;
+
+
   // auto memoryManager = new MemoryManager();
   auto scheduler = new Scheduler();
   // auto resourceManager = new ResourceManager();
   // auto fileManager = new FileManager();
 
   for (int i = 0; i < 10000; i++) {
-    auto process = new Process(i, Utils::randomDouble(5, 1000), 0, 0);
+    int priority = Utils::randomDouble(5, 1000);
+    auto process = new Process(0, priority, 0, 0, false, false, false, 0);
     scheduler->addProcess(process);
   }
 
