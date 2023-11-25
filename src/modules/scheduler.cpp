@@ -7,7 +7,7 @@ Scheduler::Scheduler()
 
 void Scheduler::addProcess(Process *process)
 {
-  printd("Scheduler::addProcess; PID: " + std::to_string(process->getPID()));
+  printd("Scheduler::addProcess; PID: " + to_string(process->getPID()));
 
   auto priority = process->getProcessPriority();
 

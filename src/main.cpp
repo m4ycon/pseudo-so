@@ -8,11 +8,11 @@
 extern bool DEBUG;
 
 int main(int argc, char const *argv[]) {
-  std::ios::sync_with_stdio(true);
-  std::cin.tie(NULL);
+  ios::sync_with_stdio(true);
+  cin.tie(NULL);
 
   if (argc > 1) {
-    if (std::string(argv[1]) == "-d") {
+    if (string(argv[1]) == "-d") {
       DEBUG = true;
     }
     // espaço para mais flags se necessário
@@ -44,9 +44,9 @@ int main(int argc, char const *argv[]) {
   print("userQueue3: " + to_string(scheduler->userQueue3.size()));
 
 
-  // std::thread t1 = std::thread(&Process::run, process1);
-  // std::thread t2 = std::thread(&Process::run, process2);
-  // std::thread t3 = std::thread(&Process::run, process3);
+  // thread t1 = thread(&Process::run, process1);
+  // thread t2 = thread(&Process::run, process2);
+  // thread t3 = thread(&Process::run, process3);
 
   // t1.join();
   // t2.join();
