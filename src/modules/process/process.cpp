@@ -1,4 +1,4 @@
-#include "../include/process.h"
+#include "../../include/process/process.h"
 
 Process::Process(int pid, int startup_time, int priority, int processor_time, int memory_blocks, bool printer_code_requested, bool scanner_request, bool modem_request, int disk_code)
 {

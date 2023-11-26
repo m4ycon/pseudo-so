@@ -1,4 +1,4 @@
-#include "../include/fileReader.h"
+#include "../../include/utils/fileReader.h"
 
 void FileReader::setup(string processes_path, string files_path, Scheduler *scheduler, FileManager *fileManager)
 {
@@ -49,7 +49,7 @@ vector<Process *> FileReader::readProcesses(string path)
 FilesInfo FileReader::readFiles(string path)
 {
   vector<File *> files;
-  vector<Instruction *> instructions;
+  vector<FileInstruction *> instructions;
 
   string input_aux;
   int disk_size, occuped_blocks;
@@ -102,7 +102,7 @@ FilesInfo FileReader::readFiles(string path)
 
       printd("FileReader::readFiles(); pid: " + to_string(pid) + "; opcode: " + to_string(opcode) + "; filename: " + filename + "; numBlocks: " + to_string(numBlocks));
 
-      auto instruction = new Instruction(pid, opcode, filename, numBlocks);
+      auto instruction = new FileInstruction(pid, opcode, filename, numBlocks);
       instructions.push_back(instruction);
     }
     file.close();

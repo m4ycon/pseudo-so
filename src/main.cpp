@@ -1,10 +1,10 @@
 #include "./include/common.h"
-#include "./include/memoryManager.h"
-#include "./include/scheduler.h"
-#include "./include/resourceManager.h"
-#include "./include/fileManager.h"
-#include "./include/process.h"
-#include "./include/fileReader.h"
+#include "./include/memory/memoryManager.h"
+#include "./include/scheduler/scheduler.h"
+#include "./include/resource/resourceManager.h"
+#include "./include/file/fileManager.h"
+#include "./include/process/process.h"
+#include "./include/utils/fileReader.h"
 
 extern bool DEBUG;
 

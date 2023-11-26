@@ -1,6 +1,6 @@
 #pragma once
-#include "./common.h"
-#include "./process.h"
+#include "../common.h"
+#include "../process/process.h"
 
 
 class Scheduler {

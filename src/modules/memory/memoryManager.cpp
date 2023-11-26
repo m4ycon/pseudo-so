@@ -1,4 +1,4 @@
-#include "../include/memoryManager.h"
+#include "../../include/memory/memoryManager.h"
 
 MemoryManager::MemoryManager()
 {

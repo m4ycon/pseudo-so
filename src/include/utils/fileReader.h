@@ -3,18 +3,18 @@
 #include <sstream>
 #include <algorithm>
 
-#include "./common.h"
-#include "./process.h"
-#include "./file.h"
-#include "./instruction.h"
-#include "./scheduler.h"
-#include "./fileManager.h"
+#include "../common.h"
+#include "../file/file.h"
+#include "../file/fileInstruction.h"
+#include "../file/fileManager.h"
+#include "../process/process.h"
+#include "../scheduler/scheduler.h"
 
 struct FilesInfo
 {
   int disk_size, occuped_blocks;
   vector<File *> files;
-  vector<Instruction *> instructions;
+  vector<FileInstruction *> instructions;
 };
 
 class FileReader
