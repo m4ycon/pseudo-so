@@ -3,7 +3,10 @@
 
 class File {
   public:
-    File();
+    File(string filename, int start_block, int size);
 
   private:
+    string filename;
+    int start_block;
+    int size;
 };

@@ -40,6 +40,13 @@ void Scheduler::addProcess(Process *process)
   printd("Scheduler::addProcess - all user queues are full");
 }
 
+void Scheduler::addProcess(vector<Process *> processes)
+{
+  printd("Scheduler::addProcess; size: " + to_string(processes.size()));
+
+  for (auto process : processes) addProcess(process);
+}
+
 Process *Scheduler::removeProcess()
 {
   printd("Scheduler::removeProcess");

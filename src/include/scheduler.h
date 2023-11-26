@@ -8,6 +8,7 @@ class Scheduler {
     Scheduler();
 
     void addProcess(Process* process);
+    void addProcess(vector<Process*> processes);
     Process* removeProcess();
 
 

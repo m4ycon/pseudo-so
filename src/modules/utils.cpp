@@ -42,3 +42,8 @@ double Utils::randomDouble(double min, double max)
 
   return dis(gen);
 }
+
+void Utils::removeCommas(std::string &str)
+{
+  str.erase(remove(str.begin(), str.end(), ','), str.end());
+}

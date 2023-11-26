@@ -1,8 +1,8 @@
 #include "../include/process.h"
 
-Process::Process(int startup_time, int priority, int processor_time, int memory_blocks, bool printer_code_requested, bool scanner_request, bool modem_request, int disk_code)
+Process::Process(int pid, int startup_time, int priority, int processor_time, int memory_blocks, bool printer_code_requested, bool scanner_request, bool modem_request, int disk_code)
 {
-  this->PID = 0;
+  this->PID = pid;
   this->priority = priority;
   this->startup_time = startup_time;
   this->processor_time = processor_time;
