@@ -1,5 +1,4 @@
 #include "../../include/file/fileManager.h"
-#include "fileManager.h"
 
 FileManager::FileManager(int disk_size, vector<File *> files, vector<FileInstruction *> instructions)
 {
@@ -101,8 +100,9 @@ void FileManager::printDisk()
 {
   printd("FileManager::printDisk()");
 
+  print("|", false);
   for (int i = 0; i < this->disk_size; i++) {
-    print(this->disk_blocks[i] + (i + 1 != this->disk_size ? "," : "."), false);
+    print(this->disk_blocks[i] + '|', false);
   }
   print();
 }
