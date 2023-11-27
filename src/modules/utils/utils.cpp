@@ -4,17 +4,19 @@
 std::mutex printMtx;
 bool DEBUG = false;
 
-void print(const std::string &message)
+void print(const std::string &message, bool endline)
 {
   std::lock_guard<std::mutex> lock(printMtx); // lock is released when 'lock' goes out of scope
-  std::cout << message << std::endl;
+  std::cout << message;
+  if (endline) std::cout << std::endl;
 }
 
-void printd(const std::string &message)
+void printd(const std::string &message, bool endline)
 {
   if (DEBUG) {
     std::lock_guard<std::mutex> lock(printMtx); // lock is released when 'lock' goes out of scope
-    std::cout << message << std::endl;
+    std::cout << message;
+    if (endline) std::cout << std::endl;
   }
 }
 

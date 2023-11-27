@@ -12,7 +12,7 @@
 
 struct FilesInfo
 {
-  int disk_size, occuped_blocks;
+  int disk_size, segment_blocks;
   vector<File *> files;
   vector<FileInstruction *> instructions;
 };
@@ -20,9 +20,9 @@ struct FilesInfo
 class FileReader
 {
 public:
-  static void setup(string processes_path, string files_path, Scheduler *scheduler, FileManager *fileManager);
+  static FileManager* setup(string processes_path, string files_path, Scheduler *scheduler);
 
 private:
-  static vector<Process *> readProcesses(string path);
+  static vector<Process*> readProcesses(string path);
   static FilesInfo readFiles(string path);
 };

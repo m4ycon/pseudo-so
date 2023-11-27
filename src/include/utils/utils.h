@@ -12,5 +12,5 @@ public:
   static void removeCommas(std::string &str);
 };
 
-void print(const std::string &message);
-void printd(const std::string &message);
+void print(const std::string &message = "", bool endl = true);
+void printd(const std::string &message = "", bool endl = true);

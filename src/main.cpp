@@ -20,10 +20,8 @@ int main(int argc, char const *argv[]) {
   }
 
   auto scheduler = new Scheduler();
-  auto fileManager = new FileManager();
-
   auto fileReader = new FileReader();
-  fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler, fileManager);
+  auto fileManager = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
 
   return 0;
 

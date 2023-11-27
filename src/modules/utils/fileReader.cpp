@@ -1,12 +1,14 @@
 #include "../../include/utils/fileReader.h"
 
-void FileReader::setup(string processes_path, string files_path, Scheduler *scheduler, FileManager *fileManager)
+FileManager* FileReader::setup(string processes_path, string files_path, Scheduler *scheduler)
 {
   auto files_info = readFiles(files_path);
   auto processes = readProcesses(processes_path);
 
   scheduler->addProcess(processes);
-  fileManager->setup(files_info.disk_size, files_info.occuped_blocks, files_info.files, files_info.instructions);
+  auto fileManager = new FileManager(files_info.disk_size, files_info.files, files_info.instructions);
+
+  return fileManager;
 }
 
 vector<Process *> FileReader::readProcesses(string path)
@@ -52,7 +54,7 @@ FilesInfo FileReader::readFiles(string path)
   vector<FileInstruction *> instructions;
 
   string input_aux;
-  int disk_size, occuped_blocks;
+  int disk_size, segment_blocks;
   
   ifstream file(path);
   string line;
@@ -65,12 +67,12 @@ FilesInfo FileReader::readFiles(string path)
 
     getline(file, line);
     Utils::removeCommas(line), ss.clear(), ss.str(line);
-    ss >> input_aux, occuped_blocks = stoi(input_aux);
+    ss >> input_aux, segment_blocks = stoi(input_aux);
 
-    printd("FileReader::readFiles(); disk_size: " + to_string(disk_size) + "; occuped_blocks: " + to_string(occuped_blocks));
+    printd("FileReader::readFiles(); disk_size: " + to_string(disk_size) + "; segment_blocks: " + to_string(segment_blocks));
 
     // files
-    for(int i = 0; i < occuped_blocks; i++) {
+    for(int i = 0; i < segment_blocks; i++) {
       getline(file, line);
       Utils::removeCommas(line), ss.clear(), ss.str(line);
 
@@ -107,7 +109,7 @@ FilesInfo FileReader::readFiles(string path)
     }
     file.close();
 
-    return { disk_size, occuped_blocks, files, instructions };
+    return { disk_size, segment_blocks, files, instructions };
   }
 
   throw runtime_error("Unable to open file. Path: " + path);
