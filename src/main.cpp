@@ -1,10 +1,5 @@
 #include "./include/common.h"
-#include "./include/memory/memoryManager.h"
-#include "./include/scheduler/scheduler.h"
-#include "./include/resource/resourceManager.h"
-#include "./include/file/fileManager.h"
-#include "./include/process/process.h"
-#include "./include/utils/fileReader.h"
+#include "./include/so.h"
 
 extern bool DEBUG;
 
@@ -19,9 +14,8 @@ int main(int argc, char const *argv[]) {
     // espaço para mais flags se necessário
   }
 
-  auto scheduler = new Scheduler();
-  auto fileReader = new FileReader();
-  auto fileManager = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
+  auto so = new SO();
+  so->exec();
 
   return 0;
 

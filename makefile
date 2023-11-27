@@ -1,7 +1,7 @@
 TARGET = so
 FLAGS = -Wall -std=c++20 -lm
 MOD_FOLDER = ./src/modules
-FILES = $(wildcard $(MOD_FOLDER)/**/*.cpp)
+FILES = $(wildcard $(MOD_FOLDER)/**/*.cpp) $(wildcard $(MOD_FOLDER)/*.cpp)
 
 all:
 	g++ $(FLAGS) $(FILES) ./src/main.cpp -o $(TARGET)

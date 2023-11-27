@@ -31,12 +31,8 @@ FileManager::FileManager(int disk_size, vector<File *> files, vector<FileInstruc
           printStr += to_string(file->start_block + i) + (i + 1 != file->size ? ", " : ").");
 
         print(printStr);
-        continue;
-      }
-
-      if (resCode == NOT_ENOUGH_SPACE) {
+      } else if (resCode == NOT_ENOUGH_SPACE) {
         print("O processo " + to_string(instruction->pid) + " não pode criar o arquivo " + instruction->filename + " (falta de espaço).");
-        continue;
       }
     } else {
       // delete
@@ -44,12 +40,8 @@ FileManager::FileManager(int disk_size, vector<File *> files, vector<FileInstruc
 
       if (resCode == OK) {
         print("O processo " + to_string(instruction->pid) + " deletou o arquivo " + instruction->filename + ".");
-        continue;
-      }
-
-      if (resCode == FILE_NOT_FOUND) {
+      } else if (resCode == FILE_NOT_FOUND) {
         print("O processo " + to_string(instruction->pid) + " não pode deletar o arquivo " + instruction->filename + " porque ele não existe.");
-        continue;
       }
     }
   }
@@ -84,15 +76,15 @@ FileActionCode FileManager::removeFile(string filename)
 
 File *FileManager::getFile(string filename)
 {
-  int start_block = 0, size = 0;
+  int start_block = -1, size = 0;
   for (int i = 0; i < this->disk_size; i++) {
     if (this->disk_blocks[i] == filename) {
-      if (start_block == 0) start_block = i;
+      if (start_block == -1) start_block = i;
       size++;
-    }
+    } else if (start_block != -1) break;
   }
 
-  if (start_block == 0) return NULL;
+  if (start_block == -1) return NULL;
   return new File(filename, start_block, size);
 }
 
@@ -100,11 +92,10 @@ void FileManager::printDisk()
 {
   printd("FileManager::printDisk()");
 
-  print("|", false);
-  for (int i = 0; i < this->disk_size; i++) {
-    print(this->disk_blocks[i] + '|', false);
-  }
-  print();
+  string printStr = "|";
+  for (int i = 0; i < this->disk_size; i++)
+    printStr += this->disk_blocks[i] + '|';
+  print(printStr);
 }
 
 void FileManager::compactDisk()
