@@ -2,11 +2,11 @@
 
 FileManager* FileReader::setup(string processes_path, string files_path, Scheduler *scheduler)
 {
-  auto files_info = readFiles(files_path);
   auto processes = readProcesses(processes_path);
+  auto files_info = readFiles(files_path, processes);
 
   scheduler->addProcess(processes);
-  auto fileManager = new FileManager(files_info.disk_size, files_info.files, files_info.instructions);
+  auto fileManager = new FileManager(files_info.disk_size, files_info.files);
 
   return fileManager;
 }
@@ -14,7 +14,7 @@ FileManager* FileReader::setup(string processes_path, string files_path, Schedul
 vector<Process *> FileReader::readProcesses(string path)
 {
   string in_startup_time, in_priority, in_processor_time, in_memory_blocks, in_printer_code_requested, in_scanner_request, in_modem_request, in_disk_code;
-  int pid = 0, startup_time, priority, processor_time, memory_blocks, printer_code_requested, scanner_request, modem_request, disk_code;
+  int startup_time, priority, processor_time, memory_blocks, printer_code_requested, scanner_request, modem_request, disk_code;
 
   vector<Process *> processes;
   ifstream file(path);
@@ -38,7 +38,7 @@ vector<Process *> FileReader::readProcesses(string path)
 
       printd("FileReader::readProcesses(); startup_time: " + to_string(startup_time) + "; priority: " + to_string(priority) + "; processor_time: " + to_string(processor_time) + "; memory_blocks: " + to_string(memory_blocks) + "; printer_code_requested: " + to_string(printer_code_requested) + "; scanner_request: " + to_string(scanner_request) + "; modem_request: " + to_string(modem_request) + "; disk_code: " + to_string(disk_code));
 
-      auto process = new Process(pid++, startup_time, priority, processor_time, memory_blocks, printer_code_requested, scanner_request, modem_request, disk_code);
+      auto process = new Process(startup_time, priority, processor_time, memory_blocks, printer_code_requested, scanner_request, modem_request, disk_code);
       processes.push_back(process);
     }
     file.close();
@@ -48,10 +48,9 @@ vector<Process *> FileReader::readProcesses(string path)
   throw runtime_error("Unable to open file. Path: " + path);
 }
 
-FilesInfo FileReader::readFiles(string path)
+FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
 {
   vector<File *> files;
-  vector<FileInstruction *> instructions;
 
   string input_aux;
   int disk_size, segment_blocks;
@@ -104,12 +103,13 @@ FilesInfo FileReader::readFiles(string path)
 
       printd("FileReader::readFiles(); pid: " + to_string(pid) + "; opcode: " + to_string(opcode) + "; filename: " + filename + "; numBlocks: " + to_string(numBlocks));
 
-      auto instruction = new FileInstruction(pid, opcode, filename, numBlocks);
-      instructions.push_back(instruction);
+      auto instruction = new Instruction(pid, opcode, filename, numBlocks);
+      if (pid < (int) processes.size())
+        processes[pid]->addInstruction(instruction);
     }
     file.close();
 
-    return { disk_size, segment_blocks, files, instructions };
+    return { disk_size, files };
   }
 
   throw runtime_error("Unable to open file. Path: " + path);

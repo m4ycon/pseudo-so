@@ -1,7 +1,7 @@
 #pragma once
 #include "../common.h"
 #include "./file.h"
-#include "./fileInstruction.h"
+#include "../process/instruction.h"
 
 enum FileActionCode
 {
@@ -15,7 +15,7 @@ const string EMPTY_BLOCK = " ";
 class FileManager
 {
 public:
-  FileManager(int disk_size, vector<File *> files, vector<FileInstruction *> instructions);
+  FileManager(int disk_size, vector<File *> files);
 
   FileActionCode addFile(File *file);
   FileActionCode removeFile(string filename);

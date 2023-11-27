@@ -5,16 +5,15 @@
 
 #include "../common.h"
 #include "../file/file.h"
-#include "../file/fileInstruction.h"
+#include "../process/instruction.h"
 #include "../file/fileManager.h"
 #include "../process/process.h"
 #include "../scheduler/scheduler.h"
 
 struct FilesInfo
 {
-  int disk_size, segment_blocks;
+  int disk_size;
   vector<File *> files;
-  vector<FileInstruction *> instructions;
 };
 
 class FileReader
@@ -24,5 +23,5 @@ public:
 
 private:
   static vector<Process*> readProcesses(string path);
-  static FilesInfo readFiles(string path);
+  static FilesInfo readFiles(string path, vector<Process*> processes);
 };

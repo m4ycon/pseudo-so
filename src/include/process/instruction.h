@@ -1,9 +1,9 @@
 #pragma once
 #include "../common.h"
 
-class FileInstruction {
+class Instruction {
   public:
-    FileInstruction(int pid, int opcode, string filename, int numBlocks = 0);
+    Instruction(int pid, int opcode, string filename, int numBlocks = 0);
     
     int pid;
     int opcode;

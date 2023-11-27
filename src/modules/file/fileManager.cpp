@@ -1,6 +1,6 @@
 #include "../../include/file/fileManager.h"
 
-FileManager::FileManager(int disk_size, vector<File *> files, vector<FileInstruction *> instructions)
+FileManager::FileManager(int disk_size, vector<File *> files)
 {
   printd("FileManager::FileManager()");
 
@@ -15,38 +15,6 @@ FileManager::FileManager(int disk_size, vector<File *> files, vector<FileInstruc
       this->disk_blocks[file->start_block + i] = file->filename;
     this->remaining_size -= file->size;
   }
-
-  printDisk();
-
-  for (auto instruction : instructions) {
-    if (instruction->opcode == 0) {
-      // create
-      auto resCode = addFile(new File(instruction->filename, 0, instruction->numBlocks));
-      
-      if (resCode == OK) {
-        auto file = getFile(instruction->filename);
-        
-        auto printStr = "O processo " + to_string(instruction->pid) + " criou o arquivo " + file->filename + " (blocos ";
-        for (int i = 0; i < file->size; i++)
-          printStr += to_string(file->start_block + i) + (i + 1 != file->size ? ", " : ").");
-
-        print(printStr);
-      } else if (resCode == NOT_ENOUGH_SPACE) {
-        print("O processo " + to_string(instruction->pid) + " não pode criar o arquivo " + instruction->filename + " (falta de espaço).");
-      }
-    } else {
-      // delete
-      auto resCode = removeFile(instruction->filename);
-
-      if (resCode == OK) {
-        print("O processo " + to_string(instruction->pid) + " deletou o arquivo " + instruction->filename + ".");
-      } else if (resCode == FILE_NOT_FOUND) {
-        print("O processo " + to_string(instruction->pid) + " não pode deletar o arquivo " + instruction->filename + " porque ele não existe.");
-      }
-    }
-  }
-
-  printDisk();
 }
 
 FileActionCode FileManager::addFile(File *file)

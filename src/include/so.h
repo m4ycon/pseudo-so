@@ -12,6 +12,7 @@ public:
   SO();
 
   void exec();
+  void execInstruction(Instruction* instruction);
 
 private:
   FileManager *fileManager;
