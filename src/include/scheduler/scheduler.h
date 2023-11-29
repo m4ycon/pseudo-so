@@ -2,17 +2,21 @@
 #include "../common.h"
 #include "../process/process.h"
 
+class Scheduler
+{
+public:
+  Scheduler(TimePoint startTime);
 
-class Scheduler {
-  public:
-    Scheduler();
+  void addReadyProcess(Process *process);
+  bool isEmpty();
+  Process *getNextProcess();
 
-    void addProcess(Process* process);
-    void addProcess(vector<Process*> processes);
-    Process* removeProcess();
+private:
 
+  queue<Process *> readyQueue, realtimeQueue;
+  priority_queue<Process *> userQueue1, userQueue2, userQueue3;
 
-    queue<Process*> realtimeQueue;
-    priority_queue<Process*> userQueue1, userQueue2, userQueue3;
-  private:
+  chrono::steady_clock::time_point startTime;
+
+  void addProcess(Process *process);
 };

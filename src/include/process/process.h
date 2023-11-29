@@ -10,10 +10,12 @@ public:
   void run();
 
   int getPID() { return this->PID; }
-  int getProcessPriority() { return this->priority; }
+  int getPriority() { return this->priority; }
+  int getStartupTime() { return this->startup_time; }
+
+  void increasePriority();
 
   void addInstruction(Instruction *instruction);
-  void addInstruction(vector<Instruction *> instructions);
   Instruction *getActualInstruction();
   bool isFinished();
 
@@ -34,5 +36,5 @@ private:
   int disk_code;
 
   vector<Instruction *> instructions;
-  uint16_t actual_instruction = 0;
+  uint16_t pc = 0;
 };
