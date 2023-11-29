@@ -31,29 +31,26 @@ Process *Scheduler::getNextProcess()
     this->addProcess(process);
   }
 
-  Process* process = nullptr;
+  Process *process = nullptr;
 
   if (!realtimeQueue.empty()) {
-    process = realtimeQueue.front();
+    auto process = realtimeQueue.front();
     realtimeQueue.pop();
-    return process;
   }
 
-  if (!userQueue1.empty()) {
-    process = userQueue1.top();
+  if (process == nullptr && !userQueue1.empty()) {
+    auto process = userQueue1.top();
     userQueue1.pop();
+  }
 
-    if (!userQueue2.empty()) {
-      auto p = userQueue2.top();
-      userQueue2.pop();
-      userQueue1.push(p);
-      
-      if (!userQueue3.empty()) {
-        p = userQueue3.top();
-        userQueue3.pop();
-        userQueue2.push(p);
-      }
-    }
+  if (process == nullptr && !userQueue2.empty()) {
+    auto process = userQueue2.top();
+    userQueue2.pop();
+  }
+
+  if (process == nullptr && !userQueue3.empty()) {
+    auto process = userQueue3.top();
+    userQueue3.pop();
   }
 
   if (process == nullptr) {
@@ -100,4 +97,6 @@ void Scheduler::addProcess(Process *process)
   }
 
   printd("Scheduler::addProcess - all user queues are full");
+
+  // TODO: se estiverem todas cheias, volta pra fila de prontos
 }
