@@ -1,14 +1,13 @@
 #include "../../include/utils/fileReader.h"
 
-FileManager* FileReader::setup(string processes_path, string files_path, Scheduler *scheduler)
+pair<FileManager*, vector<Process*>> FileReader::setup(string processes_path, string files_path, Scheduler *scheduler)
 {
   auto processes = readProcesses(processes_path);
   auto files_info = readFiles(files_path, processes);
-
-  scheduler->addProcess(processes);
+  
   auto fileManager = new FileManager(files_info.disk_size, files_info.files);
 
-  return fileManager;
+  return { fileManager, processes };
 }
 
 vector<Process *> FileReader::readProcesses(string path)

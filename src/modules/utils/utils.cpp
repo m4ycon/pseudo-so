@@ -49,3 +49,11 @@ void Utils::removeCommas(std::string &str)
 {
   str.erase(remove(str.begin(), str.end(), ','), str.end());
 }
+
+int Utils::getElapsedTime(TimePoint startTime)
+{
+  auto endTime = std::chrono::steady_clock::now();
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+
+  return elapsedTime;
+}

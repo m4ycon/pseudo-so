@@ -15,7 +15,7 @@ Process::Process(int startup_time, int priority, int processor_time, int memory_
   this->modem_request = modem_request;
   this->disk_code = disk_code;
 
-  this->actual_instruction = 0;
+  this->pc = 0;
 }
 
 void Process::run()
@@ -26,24 +26,25 @@ void Process::run()
   print("Process::run(); PID: " + to_string(this->PID) + "; execution time: " + to_string(sleepTime));
 }
 
+void Process::increasePriority()
+{
+  if (this->priority <= 1) return;
+  this->priority--;
+}
+
 void Process::addInstruction(Instruction *instruction)
 {
   this->instructions.push_back(instruction);
-}
-
-void Process::addInstruction(vector<Instruction *> instructions)
-{
-  for (auto instruction : instructions) this->addInstruction(instruction);
 }
 
 Instruction *Process::getActualInstruction()
 {
   if (this->isFinished()) return NULL;
 
-  return this->instructions[this->actual_instruction++];
+  return this->instructions[this->pc++];
 }
 
 bool Process::isFinished()
 {
-  return this->actual_instruction >= this->instructions.size();
+  return this->pc >= this->instructions.size();
 }

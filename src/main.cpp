@@ -18,40 +18,4 @@ int main(int argc, char const *argv[]) {
   so->exec();
 
   return 0;
-
-
-  // auto memoryManager = new MemoryManager();
-  // auto resourceManager = new ResourceManager();
-
-  // for (int i = 0; i < 10000; i++) {
-  //   int priority = Utils::randomDouble(5, 1000);
-  //   auto process = new Process(0, priority, 0, 0, false, false, false, 0);
-  //   scheduler->addProcess(process);
-  // }
-
-  // print("realtimeQueue: " + to_string(scheduler->realtimeQueue.size()));
-  // print("userQueue1: " + to_string(scheduler->userQueue1.size()));
-  // print("userQueue2: " + to_string(scheduler->userQueue2.size()));
-  // print("userQueue3: " + to_string(scheduler->userQueue3.size()));
-
-  // auto p = scheduler->removeProcess();
-  // print("PID: " + to_string(p->getPID()) + "; priority: " + to_string(p->getProcessPriority()));
-  // p = scheduler->removeProcess();
-  // print("PID: " + to_string(p->getPID()) + "; priority: " + to_string(p->getProcessPriority()));
-
-  // print("realtimeQueue: " + to_string(scheduler->realtimeQueue.size()));
-  // print("userQueue1: " + to_string(scheduler->userQueue1.size()));
-  // print("userQueue2: " + to_string(scheduler->userQueue2.size()));
-  // print("userQueue3: " + to_string(scheduler->userQueue3.size()));
-
-
-  // thread t1 = thread(&Process::run, process1);
-  // thread t2 = thread(&Process::run, process2);
-  // thread t3 = thread(&Process::run, process3);
-
-  // t1.join();
-  // t2.join();
-  // t3.join();
-
-  return 0;
 }

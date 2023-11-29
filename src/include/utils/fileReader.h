@@ -19,7 +19,7 @@ struct FilesInfo
 class FileReader
 {
 public:
-  static FileManager* setup(string processes_path, string files_path, Scheduler *scheduler);
+  static pair<FileManager*, vector<Process*>> setup(string processes_path, string files_path, Scheduler *scheduler);
 
 private:
   static vector<Process*> readProcesses(string path);

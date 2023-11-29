@@ -2,57 +2,49 @@
 
 SO::SO()
 {
+  this->startTime = chrono::steady_clock::now();
   auto fileReader = new FileReader();
 
-  this->scheduler = new Scheduler();
+  this->scheduler = new Scheduler(this->startTime);
   this->memoryManager = new MemoryManager();
   this->resourceManager = new ResourceManager();
-  this->fileManager = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
+  
+  auto [fileManager, processesToArrive] = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
+  this->fileManager = fileManager;
+  this->processesToArrive = processesToArrive;
+
+  this->cpu = new CPU(this->fileManager, this->startTime);
+
+  for (auto process : this->processesToArrive) {
+    thread t(&SO::deliverProcess, this, process);
+    t.detach();
+  }
 }
 
 void SO::exec()
 {
-  while (!this->scheduler->realtimeQueue.empty()) {
-    auto process = this->scheduler->removeProcess();
-    execInstruction(process->getActualInstruction());
+  auto processes_finished = 0;
 
-    if (!process->isFinished()) this->scheduler->addProcess(process);
+  while (processes_finished < (int) this->processesToArrive.size()) {
+    auto process = this->scheduler->getNextProcess();
+    
+    if (process != nullptr) {
+      this->cpu->execProcess(process);
+      
+      if (!process->isFinished()) {
+        process->increasePriority();
+        this->scheduler->addReadyProcess(process);
+        continue;
+      }
+
+      // TODO: this->memoryManager->freeMemory(process);
+      processes_finished++;
+    }
   }
 }
-
-void SO::execInstruction(Instruction *instruction)
+void SO::deliverProcess(Process *process)
 {
-  if (instruction->opcode == 0) {
-    // create
-    auto resCode = this->fileManager->addFile(new File(instruction->filename, 0, instruction->numBlocks));
-    
-    if (resCode == OK) {
-      auto file = this->fileManager->getFile(instruction->filename);
-      
-      auto printStr = "O processo " + to_string(instruction->pid) + " criou o arquivo " + file->filename + " (blocos ";
-      for (int i = 0; i < file->size; i++)
-        printStr += to_string(file->start_block + i) + (i + 1 != file->size ? ", " : ").");
-
-      print(printStr);
-      return;
-    }
-    
-    if (resCode == NOT_ENOUGH_SPACE) {
-      print("O processo " + to_string(instruction->pid) + " não pode criar o arquivo " + instruction->filename + " (falta de espaço).");
-      return;
-    }
-  }
-
-  // delete
-  auto resCode = this->fileManager->removeFile(instruction->filename);
-
-  if (resCode == OK) {
-    print("O processo " + to_string(instruction->pid) + " deletou o arquivo " + instruction->filename + ".");
-    return;
-  }
-  
-  if (resCode == FILE_NOT_FOUND) {
-    print("O processo " + to_string(instruction->pid) + " não pode deletar o arquivo " + instruction->filename + " porque ele não existe.");
-    return;
-  }
+  Utils::sleep(process->getStartupTime());
+  // TODO: this->memoryManager->alocateMemory(process);
+  this->scheduler->addReadyProcess(process);
 }
