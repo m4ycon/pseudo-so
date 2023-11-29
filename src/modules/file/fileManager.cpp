@@ -38,7 +38,7 @@ FileActionCode FileManager::addFile(File *file)
   return OK;
 }
 
-FileActionCode FileManager::removeFile(string filename)
+FileActionCode FileManager::removeFile(char filename)
 {
   auto file = getFile(filename);
   if (file == nullptr) return FILE_NOT_FOUND;
@@ -50,7 +50,7 @@ FileActionCode FileManager::removeFile(string filename)
   return OK;
 }
 
-File *FileManager::getFile(string filename)
+File *FileManager::getFile(char filename)
 {
   int start_block = -1, size = 0;
   for (int i = 0; i < this->disk_size; i++) {
@@ -68,9 +68,9 @@ void FileManager::printDisk()
 {
   printd("FileManager::printDisk()");
 
-  string printStr = "|";
+  string printStr = to_string(SEPARATOR);
   for (int i = 0; i < this->disk_size; i++)
-    printStr += this->disk_blocks[i] + '|';
+    printStr += this->disk_blocks[i] + SEPARATOR;
   print(printStr);
 }
 

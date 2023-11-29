@@ -74,14 +74,14 @@ FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
       getline(file, line);
       Utils::removeCommas(line), ss.clear(), ss.str(line);
 
-      string filename;
+      char filename;
       int start_block, size;
 
       ss >> filename;
       ss >> input_aux, start_block = stoi(input_aux);
       ss >> input_aux, size = stoi(input_aux);
 
-      printd("FileReader::readFiles(); filename: " + filename + "; start_block: " + to_string(start_block) + "; size: " + to_string(size));
+      printd("FileReader::readFiles(); filename: " + to_string(filename) + "; start_block: " + to_string(start_block) + "; size: " + to_string(size));
 
       files.push_back(new File(filename, start_block, size));
     }
@@ -91,7 +91,7 @@ FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
       Utils::removeCommas(line), ss.clear(), ss.str(line);
 
       int pid, opcode, numBlocks = 0;
-      string filename;
+      char filename;
 
       printd("FileReader::readFiles(); line: " + line);
 

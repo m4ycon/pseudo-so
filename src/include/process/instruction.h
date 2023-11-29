@@ -3,11 +3,11 @@
 
 class Instruction {
   public:
-    Instruction(int pid, int opcode, string filename, int numBlocks = 0);
+    Instruction(int pid, int opcode, char filename, int numBlocks = 0);
     
     int pid;
     int opcode;
-    string filename;
+    char filename;
     int numBlocks;
 
   private:

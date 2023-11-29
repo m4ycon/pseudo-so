@@ -6,7 +6,7 @@ SO::SO()
   auto fileReader = new FileReader();
 
   this->scheduler = new Scheduler(this->startTime);
-  this->memoryManager = new MemoryManager();
+  this->memoryManager = new MemoryManager(64, 1024 - 64);
   this->resourceManager = new ResourceManager();
   
   auto [fileManager, processesToArrive] = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
@@ -37,7 +37,7 @@ void SO::exec()
         continue;
       }
 
-      // TODO: this->memoryManager->freeMemory(process);
+      this->memoryManager->freeMemory(process);
       processes_finished++;
     }
   }
@@ -45,6 +45,6 @@ void SO::exec()
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
-  // TODO: this->memoryManager->alocateMemory(process);
+  this->memoryManager->alocateMemory(process);
   this->scheduler->addReadyProcess(process);
 }

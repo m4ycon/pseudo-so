@@ -3,9 +3,9 @@
 
 class File {
   public:
-    File(string filename, int start_block, int size);
+    File(char filename, int start_block, int size);
 
-    string filename;
+    char filename;
     int start_block;
     int size;
   private:

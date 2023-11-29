@@ -1,6 +1,6 @@
 #include "../../include/process/instruction.h"
 
-Instruction::Instruction(int pid, int opcode, string filename, int numBlocks)
+Instruction::Instruction(int pid, int opcode, char filename, int numBlocks)
 {
   this->pid = pid;
   this->opcode = opcode;

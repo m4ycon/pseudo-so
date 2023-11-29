@@ -1,6 +1,6 @@
 #include "../../include/file/file.h"
 
-File::File(string filename, int start_block, int size)
+File::File(char filename, int start_block, int size)
 {
   this->filename = filename;
   this->start_block = start_block;
