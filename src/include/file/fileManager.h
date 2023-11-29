@@ -28,4 +28,5 @@ private:
   string disk_blocks[DISK_SIZE];
 
   void compactDisk();
+  void insertString(int size, const char* str);
 };
