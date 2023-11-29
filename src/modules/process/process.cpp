@@ -28,8 +28,10 @@ void Process::run()
 
 void Process::increasePriority()
 {
-  if (this->priority <= 1) return;
-  this->priority--;
+  this->times_executed++;
+
+  // if (this->priority <= 1) return;
+  // this->priority--;
 }
 
 void Process::addInstruction(Instruction *instruction)

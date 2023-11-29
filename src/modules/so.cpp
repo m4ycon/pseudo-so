@@ -37,6 +37,7 @@ void SO::exec()
         continue;
       }
 
+      // finished actions
       this->memoryManager->freeMemory(process);
       processes_finished++;
     }

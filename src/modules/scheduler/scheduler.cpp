@@ -79,18 +79,23 @@ void Scheduler::addProcess(Process *process)
     return;
   }
 
-  if (userQueue1.size() < MAX_QUEUE_SIZE) {
-    userQueue1.push(process);
+  auto timesExecuted = process->getTimesExecuted();
+
+  // 4+ times executed
+  if (timesExecuted > 3 && userQueue3.size() < MAX_QUEUE_SIZE) {
+    userQueue3.push(process);
     return;
   }
 
-  if (userQueue2.size() < MAX_QUEUE_SIZE) {
+  // 1-3 times executed
+  if (timesExecuted > 0 && userQueue2.size() < MAX_QUEUE_SIZE) {
     userQueue2.push(process);
     return;
   }
 
-  if (userQueue3.size() < MAX_QUEUE_SIZE) {
-    userQueue3.push(process);
+  // first time executing
+  if (timesExecuted == 0 && userQueue1.size() < MAX_QUEUE_SIZE) {
+    userQueue1.push(process);
     return;
   }
 
