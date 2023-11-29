@@ -25,8 +25,8 @@ public:
 
 private:
   int disk_size, remaining_size;
-  string disk_blocks[DISK_SIZE];
+  string disk_blocks[10000];
 
   void compactDisk();
-  void insertString(int size, const char* str);
+  int getContiguousIndex(int size);
 };

@@ -12,4 +12,3 @@
 using namespace std;
 
 #define MAX_QUEUE_SIZE 1000
-#define DISK_SIZE 1000
