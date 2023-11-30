@@ -2,7 +2,7 @@
 
 SO::SO()
 {
-  this->startTime = chrono::steady_clock::now();
+  this->startTime = Utils::now();
   auto fileReader = new FileReader();
 
   this->scheduler = new Scheduler(this->startTime);
@@ -28,15 +28,14 @@ void SO::exec()
   while (processes_finished < (int) this->processesToArrive.size()) {
     auto process = this->scheduler->getNextProcess();
     
-    if (process != nullptr) {
-      this->cpu->execProcess(process);
-      
-      if (!process->isFinished()) {
-        process->increasePriority();
-        this->scheduler->addReadyProcess(process);
-        continue;
-      }
+    if (process == nullptr) continue;
 
+    this->cpu->execProcess(process);
+    
+    if (!process->isFinished()) {
+      process->increasePriority();
+      this->scheduler->addReadyProcess(process);
+    } else {
       // finished actions
       this->memoryManager->freeMemory(process);
       processes_finished++;

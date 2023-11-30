@@ -12,7 +12,6 @@ public:
   int getPID() { return this->PID; }
   int getPriority() { return this->priority; }
   int getStartupTime() { return this->startup_time; }
-  int getTimesExecuted() { return this->times_executed; }
 
   void increasePriority();
 
@@ -25,7 +24,6 @@ public:
 private:
   int PID;
   int priority;
-  int times_executed = 0;
 
   int startup_time;
   int processor_time;

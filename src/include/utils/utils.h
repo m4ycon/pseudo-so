@@ -13,6 +13,7 @@ public:
   static void sleep(double time);
   static double randomDouble(double min, double max);
   static void removeCommas(std::string &str);
+  static TimePoint now();
   static int getElapsedTime(TimePoint startTime);
 };
 

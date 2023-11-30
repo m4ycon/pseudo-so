@@ -31,33 +31,32 @@ Process *Scheduler::getNextProcess()
     this->addProcess(process);
   }
 
-  Process *process = nullptr;
-
   if (!realtimeQueue.empty()) {
     auto process = realtimeQueue.front();
     realtimeQueue.pop();
+    return process;
   }
 
-  if (process == nullptr && !userQueue1.empty()) {
+  if (!userQueue1.empty()) {
     auto process = userQueue1.top();
     userQueue1.pop();
+    return process;
   }
 
-  if (process == nullptr && !userQueue2.empty()) {
+  if (!userQueue2.empty()) {
     auto process = userQueue2.top();
     userQueue2.pop();
+    return process;
   }
 
-  if (process == nullptr && !userQueue3.empty()) {
+  if (!userQueue3.empty()) {
     auto process = userQueue3.top();
     userQueue3.pop();
+    return process;
   }
 
-  if (process == nullptr) {
-    printd("Scheduler::getNextProcess - all queues are empty");
-  }
-
-  return process;
+  printd("Scheduler::getNextProcess - all queues are empty");
+  return nullptr;
 }
 
 void Scheduler::addProcess(Process *process)
@@ -66,37 +65,27 @@ void Scheduler::addProcess(Process *process)
 
   auto priority = process->getPriority();
 
-  if (priority == 0) {
-    if (realtimeQueue.size() >= MAX_QUEUE_SIZE) {
-      printd("Scheduler::addProcess - realtimeQueue is full");
-      return;
-    }
-
+  if (priority == 0 && realtimeQueue.size() < MAX_QUEUE_SIZE) {
     realtimeQueue.push(process);
     return;
   }
 
-  auto timesExecuted = process->getTimesExecuted();
-
-  // 4+ times executed
-  if (timesExecuted > 3 && userQueue3.size() < MAX_QUEUE_SIZE) {
-    userQueue3.push(process);
-    return;
-  }
-
-  // 1-3 times executed
-  if (timesExecuted > 0 && userQueue2.size() < MAX_QUEUE_SIZE) {
-    userQueue2.push(process);
-    return;
-  }
-
-  // first time executing
-  if (timesExecuted == 0 && userQueue1.size() < MAX_QUEUE_SIZE) {
+  if (priority == 1 && userQueue1.size() < MAX_QUEUE_SIZE) {
     userQueue1.push(process);
     return;
   }
 
-  printd("Scheduler::addProcess - all user queues are full");
+  if (priority == 2 && userQueue2.size() < MAX_QUEUE_SIZE) {
+    userQueue2.push(process);
+    return;
+  }
 
-  // TODO: se estiverem todas cheias, volta pra fila de prontos
+  if (priority >= 3 && userQueue3.size() < MAX_QUEUE_SIZE) {
+    userQueue3.push(process);
+    return;
+  }
+
+  this->readyQueue.push(process);
+
+  printd("Scheduler::addProcess - all queues are full, adding to ready queue");
 }

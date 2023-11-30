@@ -29,6 +29,7 @@ void printd(const std::string &message, bool endline)
   }
 #else
   #include <unistd.h> // Linux
+#include "utils.h"
   void Utils::sleep(double seconds)
   {
     printd("Utils::sleep()");
@@ -50,10 +51,15 @@ void Utils::removeCommas(std::string &str)
   str.erase(remove(str.begin(), str.end(), ','), str.end());
 }
 
+TimePoint Utils::now()
+{
+  return std::chrono::steady_clock::now();
+}
+
 int Utils::getElapsedTime(TimePoint startTime)
 {
-  auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+  auto endTime = Utils::now();
+  auto elapsedTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 
-  return elapsedTime;
+  return elapsedTimeMs;
 }
