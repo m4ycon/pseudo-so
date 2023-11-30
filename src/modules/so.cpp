@@ -27,13 +27,25 @@ void SO::exec()
 
   while (processes_finished < (int) this->processesToArrive.size()) {
     auto process = this->scheduler->getNextProcess();
-    
     if (process == nullptr) continue;
+
+    auto elapsedTime = Utils::getElapsedTime(this->startTime);
+    print("SO::exec - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(elapsedTime) + "ms");
 
     if (process->getPriority() == 0) {
       this->handleRealtimeProcess(process);
+
+      processes_finished++;
+      this->memoryManager->freeMemory(process);
     } else {
       this->handleUserProcess(process);
+
+      if (!process->isFinished()) {
+        this->scheduler->addReadyProcess(process);
+      } else {
+        processes_finished++;
+        this->memoryManager->freeMemory(process);
+      }
     }
   }
 }
@@ -43,8 +55,6 @@ void SO::handleRealtimeProcess(Process *process)
   while (!process->isFinished()) {
     this->cpu->execProcess(process);
   }
-
-  this->memoryManager->freeMemory(process);
 }
 
 void SO::handleUserProcess(Process *process)
@@ -53,13 +63,6 @@ void SO::handleUserProcess(Process *process)
   while (!process->isFinished() && Utils::getElapsedTime(startTime) < QUANTUM) {
     this->cpu->execProcess(process);
   }
-  
-  if (!process->isFinished()) {
-    this->scheduler->addReadyProcess(process); // TODO: is this correct?
-    return;
-  }
-
-  this->memoryManager->freeMemory(process);
 }
 
 void SO::deliverProcess(Process *process) 

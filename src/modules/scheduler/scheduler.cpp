@@ -25,7 +25,7 @@ Process *Scheduler::getNextProcess()
   printd("Scheduler::getNextProcess");
 
   // check if there is any process in the ready queue
-  if (!readyQueue.empty()) {
+  while (!readyQueue.empty()) {
     auto process = readyQueue.front();
     readyQueue.pop();
     this->addProcess(process);

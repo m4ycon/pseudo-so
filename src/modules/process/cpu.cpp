@@ -9,9 +9,6 @@ CPU::CPU(FileManager *fileManager, TimePoint startTime)
 
 void CPU::execProcess(Process *process)
 {
-  const auto elapsedTime = Utils::getElapsedTime(this->startTime);
-  print("CPU::execProcess; PID: " + to_string(process->getPID()) + "; Time: " + to_string(elapsedTime) + "ms");
-
   this->execInstruction(process->getActualInstruction());
 }
 
