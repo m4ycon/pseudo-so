@@ -1,4 +1,4 @@
-TARGET = so
+TARGET = main
 FLAGS = -Wall -std=c++20 -lm
 MOD_FOLDER = ./src/modules
 FILES = $(wildcard $(MOD_FOLDER)/**/*.cpp) $(wildcard $(MOD_FOLDER)/*.cpp)
@@ -11,3 +11,6 @@ debug:
 	./$(TARGET) -d
 clear:
 	rm -f $(TARGET)
+
+main.exe: ./src/$(TARGET).cpp
+	g++ $(FLAGS) $(FILES) -g ./src/main.cpp -o $(TARGET)
