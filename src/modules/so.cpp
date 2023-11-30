@@ -70,7 +70,11 @@ void SO::handleUserProcess(Process *process)
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
-  this->memoryManager->alocateMemory(process);
+  bool allocateMemSuccess = this->memoryManager->alocateMemory(process);
+  if (!allocateMemSuccess) {
+    print("Não foi possível alocar memória para o processo " + to_string(process->getPID()));
+    return ;
+  }
   this->scheduler->addReadyProcess(process);
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }

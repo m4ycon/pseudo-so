@@ -12,7 +12,8 @@ public:
   int getPID() { return this->PID; }
   int getPriority() { return this->priority; }
   int getStartupTime() { return this->startup_time; }
-
+  int getMemoryBlock() { return this->memory_blocks; }
+  
   void increasePriority();
 
   void addInstruction(Instruction *instruction);
