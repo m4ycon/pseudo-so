@@ -25,5 +25,8 @@ private:
   TimePoint startTime;
   vector<Process *> processesToArrive;
 
+  void handleRealtimeProcess(Process *process);
+  void handleUserProcess(Process *process);
+
   void deliverProcess(Process *process);
 };

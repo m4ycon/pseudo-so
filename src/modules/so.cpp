@@ -30,19 +30,39 @@ void SO::exec()
     
     if (process == nullptr) continue;
 
-    this->cpu->execProcess(process);
-    
-    if (!process->isFinished()) {
-      process->increasePriority();
-      this->scheduler->addReadyProcess(process);
+    if (process->getPriority() == 0) {
+      this->handleRealtimeProcess(process);
     } else {
-      // finished actions
-      this->memoryManager->freeMemory(process);
-      processes_finished++;
+      this->handleUserProcess(process);
     }
   }
 }
-void SO::deliverProcess(Process *process)
+
+void SO::handleRealtimeProcess(Process *process)
+{
+  while (!process->isFinished()) {
+    this->cpu->execProcess(process);
+  }
+
+  this->memoryManager->freeMemory(process);
+}
+
+void SO::handleUserProcess(Process *process)
+{
+  auto startTime = Utils::now();
+  while (!process->isFinished() && Utils::getElapsedTime(startTime) < QUANTUM) {
+    this->cpu->execProcess(process);
+  }
+  
+  if (!process->isFinished()) {
+    this->scheduler->addReadyProcess(process); // TODO: is this correct?
+    return;
+  }
+
+  this->memoryManager->freeMemory(process);
+}
+
+void SO::deliverProcess(Process *process) 
 {
   Utils::sleep(process->getStartupTime());
   this->memoryManager->alocateMemory(process);

@@ -14,12 +14,12 @@ MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 
 void MemoryManager::freeMemory(Process *process)
 {
-  // TODO: implementar
+  // TODO: implement
 }
 
 void MemoryManager::alocateMemory(Process *process)
 {
-  // TODO: implementar
+  // TODO: implement
 }
 
 void MemoryManager::printMemory()

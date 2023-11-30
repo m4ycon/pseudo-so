@@ -13,6 +13,7 @@ using namespace std;
 
 #define MAX_QUEUE_SIZE 1000
 #define DEF_MEMORY_SIZE 10000
+#define QUANTUM 1 // ms
 
 const char EMPTY_BLOCK = ' ';
 const char SEPARATOR = '|';

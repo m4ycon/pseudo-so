@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]) {
     if (string(argv[1]) == "-d") {
       DEBUG = true;
     }
-    // espaço para mais flags se necessário
+    // space for more flags
   }
 
   auto so = new SO();
