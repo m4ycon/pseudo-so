@@ -1,6 +1,8 @@
 #include "../../include/scheduler/scheduler.h"
 
 
+std::mutex schedulerMutex;
+
 Scheduler::Scheduler(TimePoint startTime)
 {
   printd("Scheduler::Scheduler()");
@@ -10,12 +12,14 @@ Scheduler::Scheduler(TimePoint startTime)
 
 void Scheduler::addReadyProcess(Process *process)
 {
+  std::lock_guard<std::mutex> lock(schedulerMutex);
   printd("Scheduler::addReadyProcess; PID: " + to_string(process->getPID()));
   this->readyQueue.push(process);
 }
 
 bool Scheduler::isEmpty()
 {
+  std::lock_guard<std::mutex> lock(schedulerMutex);
   auto totalSize = readyQueue.size() + realtimeQueue.size() + userQueue1.size() + userQueue2.size() + userQueue3.size();
   return totalSize == 0;
 }
@@ -23,6 +27,7 @@ bool Scheduler::isEmpty()
 Process *Scheduler::getNextProcess()
 {
   printd("Scheduler::getNextProcess");
+  std::lock_guard<std::mutex> lock(schedulerMutex);
 
   // check if there is any process in the ready queue
   while (!readyQueue.empty()) {

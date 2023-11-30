@@ -1,5 +1,8 @@
 #include "../../include/memory/memoryManager.h"
 
+
+std::mutex memoryMutex;
+
 MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 {
   printd("MemoryManager::MemoryManager()");
@@ -14,11 +17,13 @@ MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 
 void MemoryManager::freeMemory(Process *process)
 {
+  std::lock_guard<std::mutex> lock(memoryMutex);
   // TODO: implement
 }
 
 void MemoryManager::alocateMemory(Process *process)
 {
+  std::lock_guard<std::mutex> lock(memoryMutex);
   // TODO: implement
 }
 

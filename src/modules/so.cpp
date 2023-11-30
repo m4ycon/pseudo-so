@@ -36,6 +36,7 @@ void SO::exec()
       this->handleRealtimeProcess(process);
 
       processes_finished++;
+      print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
       this->memoryManager->freeMemory(process);
     } else {
       this->handleUserProcess(process);
@@ -44,6 +45,7 @@ void SO::exec()
         this->scheduler->addReadyProcess(process);
       } else {
         processes_finished++;
+        print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
         this->memoryManager->freeMemory(process);
       }
     }
@@ -65,9 +67,10 @@ void SO::handleUserProcess(Process *process)
   }
 }
 
-void SO::deliverProcess(Process *process) 
+void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
   this->memoryManager->alocateMemory(process);
   this->scheduler->addReadyProcess(process);
+  print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }
