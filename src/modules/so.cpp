@@ -76,11 +76,8 @@ void SO::deliverProcess(Process *process)
     return;
   }
 
-  bool gotResources = false;
-  while (!gotResources) {
-    gotResources = this->getProcessResources(process);
-  }
-  dispatcherPrint(process);
+  this->getProcessResources(process);
+  this->dispatcherPrint(process);
 
   this->scheduler->addReadyProcess(process);
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
@@ -88,29 +85,47 @@ void SO::deliverProcess(Process *process)
 
 bool SO::getProcessResources(Process *process)
 {
-  std::lock_guard<std::mutex> lock(this->gettingProcessResourcesMutex);
+  while (true) {
+    this->gettingProcessResourcesSemaphore.acquire();
 
-  bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
-  if (!allocateMemSuccess) {
-    printd("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
-    return false;
-  }
-  
-  bool requestResourceSuccess = this->resourceManager->requestResource(process);
-  if (!requestResourceSuccess) {
-    while (!this->memoryManager->freeMemory(process));
-    printd("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
-    return false;
-  }
+    bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
+    if (!allocateMemSuccess) {
+      this->gettingProcessResourcesSemaphore.release();
+      continue;
+    }
+    
+    bool requestResourceSuccess = this->resourceManager->requestResource(process);
+    if (!requestResourceSuccess) {
+      while (!this->memoryManager->freeMemory(process));
 
-  return true;
+      this->gettingProcessResourcesSemaphore.release();
+      continue;
+    }
+
+    this->gettingProcessResourcesSemaphore.release();
+    return true;
+  }
 }
 
 void SO::freeProcessResources(Process *process)
 {
-  std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
-  while (!this->memoryManager->freeMemory(process));
-  while (!this->resourceManager->freeResource(process));
+  while (true) {
+    this->freeingProcessResourcesSemaphore.acquire();
+    bool freeMemorySuccess = this->memoryManager->freeMemory(process);
+    this->freeingProcessResourcesSemaphore.release();
+
+    if (freeMemorySuccess) break;
+  }
+
+  while (true) {
+    this->freeingProcessResourcesSemaphore.acquire();
+    bool freeResourceSuccess = this->resourceManager->freeResource(process);
+    this->freeingProcessResourcesSemaphore.release();
+
+    if (freeResourceSuccess) break;
+  }
+
+  this->freeingProcessResourcesSemaphore.release();
 }
 
 bool SO::isThereEnoughResources(Process *process)
