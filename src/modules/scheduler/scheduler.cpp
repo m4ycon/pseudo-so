@@ -1,8 +1,6 @@
 #include "../../include/scheduler/scheduler.h"
 
 
-std::mutex schedulerMutex;
-
 Scheduler::Scheduler(TimePoint startTime)
 {
   printd("Scheduler::Scheduler()");

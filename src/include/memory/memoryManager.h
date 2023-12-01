@@ -25,6 +25,8 @@ private:
 
   int realtimeMemory[DEF_MEMORY_SIZE], userMemory[DEF_MEMORY_SIZE];
 
+  std::mutex memoryMutex;
+
   int getContiguousIndexMemory(int size, MemoryType type);
   void compactMemory(MemoryType type);
 };

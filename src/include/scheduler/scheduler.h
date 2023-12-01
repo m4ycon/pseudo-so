@@ -18,5 +18,7 @@ private:
 
   chrono::steady_clock::time_point startTime;
 
+  std::mutex schedulerMutex;
+
   void addProcess(Process *process);
 };

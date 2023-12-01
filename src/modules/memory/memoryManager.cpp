@@ -1,8 +1,6 @@
 #include "../../include/memory/memoryManager.h"
 
 
-std::mutex memoryMutex;
-
 MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 {
   printd("MemoryManager::MemoryManager()");
