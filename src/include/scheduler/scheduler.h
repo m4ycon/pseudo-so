@@ -14,7 +14,7 @@ public:
 private:
 
   queue<Process *> readyQueue, realtimeQueue;
-  priority_queue<Process *> userQueue1, userQueue2, userQueue3;
+  queue<Process *> userQueue1, userQueue2, userQueue3;
 
   chrono::steady_clock::time_point startTime;
 

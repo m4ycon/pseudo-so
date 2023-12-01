@@ -43,19 +43,19 @@ Process *Scheduler::getNextProcess()
   }
 
   if (!userQueue1.empty()) {
-    auto process = userQueue1.top();
+    auto process = userQueue1.front();
     userQueue1.pop();
     return process;
   }
 
   if (!userQueue2.empty()) {
-    auto process = userQueue2.top();
+    auto process = userQueue2.front();
     userQueue2.pop();
     return process;
   }
 
   if (!userQueue3.empty()) {
-    auto process = userQueue3.top();
+    auto process = userQueue3.front();
     userQueue3.pop();
     return process;
   }

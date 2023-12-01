@@ -151,6 +151,7 @@ bool SO::getProcessResources(Process *process)
 
 void SO::freeProcessResources(Process *process)
 {
+  std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
   this->memoryManager->freeMemory(process);
   this->resourceManager->freeResource(process);
 }

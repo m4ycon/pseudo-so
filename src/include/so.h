@@ -26,6 +26,7 @@ private:
   vector<Process *> processesToArrive;
 
   std::mutex gettingProcessResourcesMutex;
+  std::mutex freeingProcessResourcesMutex;
 
   void handleRealtimeProcess(Process *process);
   void handleUserProcess(Process *process);

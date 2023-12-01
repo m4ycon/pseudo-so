@@ -34,8 +34,13 @@ bool ResourceManager::requestResource(Process *process)
   if (is_modem_requested && modem_request_pid == -1)
     modem_request_pid = pid;
 
-  if ((disk_code == 0 || disk_code == 1) && disk_request_pid[disk_code] == -1)
-    disk_request_pid[disk_code] = pid;
+  if (disk_code > 0) {
+    if (disk_request_pid[0] == -1) {
+      disk_request_pid[0] = pid;
+    } else if (disk_request_pid[1] == -1) {
+      disk_request_pid[1] = pid;
+    }
+  }
 
   return true;
 }
@@ -67,8 +72,13 @@ bool ResourceManager::freeResource(Process *process)
   if (is_modem_requested && modem_request_pid == pid)
     modem_request_pid = -1;
 
-  if ((disk_code == 0 || disk_code == 1) && disk_request_pid[disk_code] == pid)
-    disk_request_pid[disk_code] = -1;
+  if (disk_code > 0) {
+    if (disk_request_pid[0] == pid) {
+      disk_request_pid[0] = -1;
+    } else if (disk_request_pid[1] == pid) {
+      disk_request_pid[1] = -1;
+    }
+  }
 
   return true;
 }
@@ -94,7 +104,10 @@ bool ResourceManager::checkEnoughResources(Process *process)
   if (is_modem_requested && modem_request_pid != -1)
     return false;
 
-  if ((disk_code == 0 || disk_code == 1) && disk_request_pid[disk_code] != -1)
+  if (disk_code > 0 
+    && disk_request_pid[0] != -1
+    && disk_request_pid[1] != -1
+  )
     return false;
 
   return true;
