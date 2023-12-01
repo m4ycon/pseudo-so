@@ -6,11 +6,10 @@ FILES = $(wildcard $(MOD_FOLDER)/**/*.cpp) $(wildcard $(MOD_FOLDER)/*.cpp)
 all:
 	g++ $(FLAGS) $(FILES) ./src/main.cpp -o $(TARGET)
 run:
-	./$(TARGET)
-debug:
-	./$(TARGET) -d
+	./$(TARGET) ./input/processes.txt ./input/files.txt
 clear:
 	rm -f $(TARGET)
 
+# Debug
 main.exe: $(FILES) ./src/main.cpp
 	g++ $(FLAGS) $(FILES) -g ./src/main.cpp -o $(TARGET)

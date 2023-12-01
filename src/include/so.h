@@ -10,7 +10,7 @@
 class SO
 {
 public:
-  SO();
+  SO(string processes_path, string files_path);
 
   void exec();
 

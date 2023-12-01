@@ -1,7 +1,7 @@
 #include "../include/so.h"
 
 
-SO::SO()
+SO::SO(string processes_path, string files_path)
 {
   this->startTime = Utils::now();
   auto fileReader = new FileReader();
@@ -10,7 +10,7 @@ SO::SO()
   this->memoryManager = new MemoryManager(64, 1024 - 64);
   this->resourceManager = new ResourceManager();
   
-  auto [fileManager, processesToArrive] = fileReader->setup("./input/processes.txt", "./input/files.txt", scheduler);
+  auto [fileManager, processesToArrive] = fileReader->setup(processes_path, files_path, scheduler);
   this->fileManager = fileManager;
   this->processesToArrive = processesToArrive;
 
