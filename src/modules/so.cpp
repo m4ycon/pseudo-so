@@ -130,16 +130,18 @@ P0 return SIGINT */
 
 bool SO::getProcessResources(Process *process)
 {
+  std::lock_guard<std::mutex> lock(this->gettingProcessResourcesMutex);
+
   bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
   if (!allocateMemSuccess) {
-    print("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
+    printd("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
     return false;
   }
   
   bool requestResourceSuccess = this->resourceManager->requestResource(process);
   if (!requestResourceSuccess) {
     this->memoryManager->freeMemory(process);
-    print("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
+    printd("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
     return false;
   }
 

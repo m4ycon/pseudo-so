@@ -25,6 +25,8 @@ private:
   TimePoint startTime;
   vector<Process *> processesToArrive;
 
+  std::mutex gettingProcessResourcesMutex;
+
   void handleRealtimeProcess(Process *process);
   void handleUserProcess(Process *process);
 
