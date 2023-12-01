@@ -43,46 +43,29 @@ bool MemoryManager::allocateMemory(Process *process)
   std::lock_guard<std::mutex> lock(memoryMutex, std::adopt_lock);
 
   auto pid = process->getPID();
+  auto is_realtime = process->isRealtime();
+  auto memory_block = process->getMemoryBlock();
+  auto memory_type = is_realtime ? REALTIME : USER;
+  auto memory_size = is_realtime ? &realtimeMemorySize : &userMemorySize;
+  auto used_memory_size = is_realtime ? &usedRealtimeMemorySize : &usedUserMemorySize;
+  auto memory = is_realtime ? realtimeMemory : userMemory;
 
-  if (process->isRealtime()) {
-    if (usedRealtimeMemorySize + process->getMemoryBlock() > realtimeMemorySize) {
-      return false;
-    } else {
-      usedRealtimeMemorySize += process->getMemoryBlock();
+  if (*used_memory_size + memory_block > *memory_size)
+    return false;
+  *used_memory_size += memory_block;
 
-      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), REALTIME);
-      if (startPos == -1) {
-        this->compactMemory(REALTIME);
-        startPos = getContiguousIndexMemory(process->getMemoryBlock(), REALTIME);
-      }
-
-      for (int i = 0; i < process->getMemoryBlock(); i++)
-        this->realtimeMemory[startPos + i] = pid;
-
-      processOffsets[pid] = new int(startPos);
-      process->setOffset(processOffsets[pid]);
-      return true;
-    }
-  } else {
-    if (usedUserMemorySize + process->getMemoryBlock() > userMemorySize) {
-      return false;
-    } else {
-      usedUserMemorySize += process->getMemoryBlock();
-
-      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), USER);
-      if (startPos == -1) {
-        this->compactMemory(USER);
-        startPos = getContiguousIndexMemory(process->getMemoryBlock(), USER);
-      }
-
-      for (int i = 0; i < process->getMemoryBlock(); i++)
-        this->userMemory[startPos + i] = pid;
-
-      processOffsets[pid] = new int(startPos + this->realtimeMemorySize);
-      process->setOffset(processOffsets[pid]);
-      return true;
-    }
+  auto startPos = getContiguousIndexMemory(memory_block, memory_type);
+  if (startPos == -1) {
+    this->compactMemory(memory_type);
+    startPos = getContiguousIndexMemory(memory_block, memory_type);
   }
+
+  for (int i = 0; i < memory_block; i++)
+    memory[startPos + i] = pid;
+
+  processOffsets[pid] = new int(startPos + (is_realtime ? 0 : this->realtimeMemorySize));
+  process->setOffset(processOffsets[pid]);
+  return true;
 }
 
 bool MemoryManager::isThereEnoughMemory(Process *process)
@@ -114,7 +97,7 @@ void MemoryManager::printMemory()
   print(printStr);
 }
 
-int MemoryManager::getContiguousIndexMemory(int size, MemoryType type) // TODO: fazer com ponteiros mais simplificado
+int MemoryManager::getContiguousIndexMemory(int size, MemoryType type)
 { 
   int emptyCount = 0, startPos = -1;
   auto memory = type == REALTIME ? this->realtimeMemory : this->userMemory;
