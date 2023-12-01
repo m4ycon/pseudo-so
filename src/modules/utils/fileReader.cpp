@@ -35,8 +35,6 @@ vector<Process *> FileReader::readProcesses(string path)
       modem_request = stoi(in_modem_request);
       disk_code = stoi(in_disk_code);
 
-      printd("FileReader::readProcesses(); startup_time: " + to_string(startup_time) + "; priority: " + to_string(priority) + "; processor_time: " + to_string(processor_time) + "; memory_blocks: " + to_string(memory_blocks) + "; printer_code_requested: " + to_string(printer_code_requested) + "; scanner_request: " + to_string(scanner_request) + "; modem_request: " + to_string(modem_request) + "; disk_code: " + to_string(disk_code));
-
       auto process = new Process(startup_time, priority, processor_time, memory_blocks, printer_code_requested, scanner_request, modem_request, disk_code);
       processes.push_back(process);
     }
@@ -67,8 +65,6 @@ FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
     Utils::removeCommas(line), ss.clear(), ss.str(line);
     ss >> input_aux, segment_blocks = stoi(input_aux);
 
-    printd("FileReader::readFiles(); disk_size: " + to_string(disk_size) + "; segment_blocks: " + to_string(segment_blocks));
-
     // files
     for(int i = 0; i < segment_blocks; i++) {
       getline(file, line);
@@ -81,8 +77,6 @@ FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
       ss >> input_aux, start_block = stoi(input_aux);
       ss >> input_aux, size = stoi(input_aux);
 
-      printd("FileReader::readFiles(); filename: " + to_string(filename) + "; start_block: " + to_string(start_block) + "; size: " + to_string(size));
-
       files.push_back(new File(filename, start_block, size));
     }
 
@@ -93,14 +87,10 @@ FilesInfo FileReader::readFiles(string path, vector<Process*> processes)
       int pid, opcode, numBlocks = 0;
       char filename;
 
-      printd("FileReader::readFiles(); line: " + line);
-
       ss >> input_aux, pid = stoi(input_aux);
       ss >> input_aux, opcode = stoi(input_aux);
       ss >> filename;
       if (opcode == 0) ss >> input_aux, numBlocks = stoi(input_aux);
-
-      printd("FileReader::readFiles(); pid: " + to_string(pid) + "; opcode: " + to_string(opcode) + "; filename: " + filename + "; numBlocks: " + to_string(numBlocks));
 
       auto instruction = new Instruction(pid, opcode, filename, numBlocks);
       if (pid < (int) processes.size())

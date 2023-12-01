@@ -3,7 +3,6 @@
 
 Scheduler::Scheduler(TimePoint startTime)
 {
-  printd("Scheduler::Scheduler()");
 
   this->startTime = startTime;
 }
@@ -11,7 +10,6 @@ Scheduler::Scheduler(TimePoint startTime)
 void Scheduler::addReadyProcess(Process *process, bool increasePriority)
 {
   std::lock_guard<std::mutex> lock(schedulerMutex);
-  printd("Scheduler::addReadyProcess; PID: " + to_string(process->getPID()));
   if (increasePriority) process->increasePriority();
   this->readyQueue.push(process);
 }
@@ -25,7 +23,6 @@ bool Scheduler::isEmpty()
 
 Process *Scheduler::getNextProcess()
 {
-  printd("Scheduler::getNextProcess");
   std::lock_guard<std::mutex> lock(schedulerMutex);
 
   // check if there is any process in the ready queue
@@ -59,14 +56,11 @@ Process *Scheduler::getNextProcess()
     return process;
   }
 
-  printd("Scheduler::getNextProcess - all queues are empty");
   return nullptr;
 }
 
 void Scheduler::addProcess(Process *process)
 {
-  printd("Scheduler::addProcess; PID: " + to_string(process->getPID()));
-
   if (process->isRealtime() && realtimeQueue.size() < MAX_QUEUE_SIZE) {
     realtimeQueue.push(process);
     return;
@@ -89,6 +83,4 @@ void Scheduler::addProcess(Process *process)
   }
 
   this->readyQueue.push(process);
-
-  printd("Scheduler::addProcess - all queues are full, adding to ready queue");
 }

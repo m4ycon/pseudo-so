@@ -11,20 +11,10 @@ void print(const std::string &message, bool endline)
   if (endline) std::cout << std::endl;
 }
 
-void printd(const std::string &message, bool endline)
-{
-  if (DEBUG) {
-    std::lock_guard<std::mutex> lock(printMtx); // lock is released when 'lock' goes out of scope
-    std::cout << message;
-    if (endline) std::cout << std::endl;
-  }
-}
-
 #ifdef _WIN32
   #include <windows.h> // Windows
   void Utils::sleep(double seconds)
   {
-    printd("Utils::sleep()");
     Sleep(seconds * 1e3); // milliseconds
   }
 #else
@@ -32,7 +22,6 @@ void printd(const std::string &message, bool endline)
 #include "utils.h"
   void Utils::sleep(double seconds)
   {
-    printd("Utils::sleep()");
     usleep(seconds * 1e6); // microseconds
   }
 #endif

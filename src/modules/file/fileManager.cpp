@@ -4,8 +4,6 @@
 
 FileManager::FileManager(int disk_size, vector<File *> files)
 {
-  printd("FileManager::FileManager()");
-
   this->disk_size = disk_size;
   this->remaining_size = this->disk_size;
 
@@ -66,8 +64,6 @@ File *FileManager::getFile(char filename)
 
 void FileManager::printDisk()
 {
-  printd("FileManager::printDisk()");
-
   string printStr = to_string(SEPARATOR);
   for (int i = 0; i < this->disk_size; i++)
     printStr += this->disk_blocks[i] + SEPARATOR;

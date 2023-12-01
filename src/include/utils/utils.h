@@ -18,4 +18,3 @@ public:
 };
 
 void print(const std::string &message = "", bool endl = true);
-void printd(const std::string &message = "", bool endl = true);

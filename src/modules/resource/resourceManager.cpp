@@ -3,7 +3,6 @@
 
 ResourceManager::ResourceManager()
 {
-  printd("ResourceManager::ResourceManager()");
 }
 
 bool ResourceManager::requestResource(Process *process)

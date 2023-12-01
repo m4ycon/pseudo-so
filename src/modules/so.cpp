@@ -72,10 +72,7 @@ void SO::handleUserProcess(Process *process)
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
-  if (!this->isThereEnoughResources(process)) {
-    printd("Não há recursos suficientes para o processo. PID: " + to_string(process->getPID()));
-    return;
-  }
+  if (!this->isThereEnoughResources(process)) return;
 
   this->getProcessResources(process);
   this->dispatcherPrint(process);

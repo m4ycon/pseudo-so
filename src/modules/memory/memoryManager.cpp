@@ -3,7 +3,6 @@
 
 MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 {
-  printd("MemoryManager::MemoryManager()");
   this->realtimeMemorySize = realtimeMemorySize;
   this->userMemorySize = userMemorySize;
 
@@ -77,8 +76,6 @@ bool MemoryManager::isThereEnoughTotalMemory(Process *process)
 
 void MemoryManager::printMemory()
 {
-  printd("FileManager::printDisk()");
-
   string printStr = "";
   for (int i = 0; i < this->realtimeMemorySize; i++)
     printStr += to_string(this->realtimeMemory[i]) + SEPARATOR;
