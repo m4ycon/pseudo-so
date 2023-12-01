@@ -115,7 +115,7 @@ void SO::freeProcessResources(Process *process)
 
 bool SO::isThereEnoughResources(Process *process)
 {
-  bool enough_memory = this->memoryManager->isThereEnoughMemory(process);
+  bool enough_memory = this->memoryManager->isThereEnoughTotalMemory(process);
   // no need to check in resourceManager
 
   return enough_memory;
