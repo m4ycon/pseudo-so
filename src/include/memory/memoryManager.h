@@ -24,6 +24,7 @@ private:
   int usedRealtimeMemorySize = 0, usedUserMemorySize = 0;
 
   int realtimeMemory[DEF_MEMORY_SIZE], userMemory[DEF_MEMORY_SIZE];
+  map<int, int*> processOffsets;
 
   std::mutex memoryMutex;
 

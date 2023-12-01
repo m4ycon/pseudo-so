@@ -82,22 +82,26 @@ void SO::deliverProcess(Process *process)
 
 void SO::dispatcherPrint(Process *process)
 {
-  /* dispatcher =>
- PID: 0
- offset: 0
- blocks: 64
- priority: 0
- time: 3
- printers: 0
- scanners: 0
- modems: 0
- drives: 0
-process 0 =>
-P0 STARTED
-P0 instruction 1
-P0 instruction 2
-P0 instruction 3
-P0 return SIGINT */
+  /*
+  dispatcher =>
+    PID: 0
+    offset: 0
+    blocks: 64
+    priority: 0
+    time: 3
+    printers: 0
+    scanners: 0
+    modems: 0
+    drives: 0
+
+  process 0 =>
+  P0 STARTED
+  P0 instruction 1
+  P0 instruction 2
+  P0 instruction 3
+  P0 return SIGINT
+  */
+
   string PID = to_string(process->getPID());
   string priority = to_string(process->getPriority());  
   string memoryBlocks = to_string(process->getMemoryBlock());

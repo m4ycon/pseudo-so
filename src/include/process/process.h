@@ -15,8 +15,8 @@ public:
   int getMemoryBlock() { return this->memory_blocks; }
   int getProcessorTime() { return this->processor_time; }
 
-  int getOffset() { return this->offset; }
-  void setOffset(int offset) { this->offset = offset; }
+  int getOffset() { return *this->offset; }
+  void setOffset(int *offset) { this->offset = offset; }
 
   bool getPrinterCodeRequest() { return this->printer_code_request; }
   bool getScannerRequest() { return this->scanner_request; }
@@ -38,7 +38,7 @@ private:
   int startup_time;
   int processor_time;
   int memory_blocks;
-  int offset;
+  int *offset;
 
   bool printer_code_request;
   bool scanner_request;

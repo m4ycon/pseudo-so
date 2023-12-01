@@ -89,7 +89,8 @@ int FileManager::getContiguousIndex(int size) {
     }
   }
 
-  return startPos;
+  if (emptyCount >= size) return startPos;
+  return -1;
 }
 
 void FileManager::compactDisk() {

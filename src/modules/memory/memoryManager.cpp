@@ -24,12 +24,14 @@ bool MemoryManager::freeMemory(Process *process)
     for (int i = 0; i < process->getMemoryBlock(); i++)
       this->realtimeMemory[process->getOffset() + i] = -1;
 
+    this->processOffsets.erase(process->getPID());
   } else {
     usedUserMemorySize -= process->getMemoryBlock();
 
     for (int i = 0; i < process->getMemoryBlock(); i++)
       this->userMemory[process->getOffset() + i - this->realtimeMemorySize] = -1;
 
+    this->processOffsets.erase(process->getPID());
   }
 
   return true;
@@ -39,6 +41,8 @@ bool MemoryManager::allocateMemory(Process *process)
 {
   if (!memoryMutex.try_lock()) return false;
   std::lock_guard<std::mutex> lock(memoryMutex, std::adopt_lock);
+
+  auto pid = process->getPID();
 
   if (process->getPriority() == 0) {
     if (usedRealtimeMemorySize + process->getMemoryBlock() > realtimeMemorySize) {
@@ -53,9 +57,10 @@ bool MemoryManager::allocateMemory(Process *process)
       }
 
       for (int i = 0; i < process->getMemoryBlock(); i++)
-        this->realtimeMemory[startPos + i] = 1;
-      process->setOffset(startPos);
+        this->realtimeMemory[startPos + i] = pid;
 
+      processOffsets[pid] = new int(startPos);
+      process->setOffset(processOffsets[pid]);
       return true;
     }
   } else {
@@ -71,10 +76,10 @@ bool MemoryManager::allocateMemory(Process *process)
       }
 
       for (int i = 0; i < process->getMemoryBlock(); i++)
-        this->userMemory[startPos + i] = 1;
-      process->setOffset(startPos);
+        this->userMemory[startPos + i] = pid;
 
-      process->setOffset(startPos + this->realtimeMemorySize);
+      processOffsets[pid] = new int(startPos + this->realtimeMemorySize);
+      process->setOffset(processOffsets[pid]);
       return true;
     }
   }
@@ -84,11 +89,18 @@ void MemoryManager::printMemory()
 {
   printd("FileManager::printDisk()");
 
-  string printStr = to_string(SEPARATOR);
+  string printStr = "";
   for (int i = 0; i < this->realtimeMemorySize; i++)
-    printStr += this->realtimeMemory[i] + SEPARATOR;
+    printStr += to_string(this->realtimeMemory[i]) + SEPARATOR;
   for (int i = 0; i < this->userMemorySize; i++)
-    printStr += this->userMemory[i] + SEPARATOR;
+    printStr += to_string(this->userMemory[i]) + SEPARATOR;
+  print(printStr);
+
+  // print map offset
+  printStr = "";
+  for (auto it = this->processOffsets.begin(); it != this->processOffsets.end(); ++it) {
+    printStr += to_string(it->first) + ":" + to_string(*it->second) + SEPARATOR;
+  }
   print(printStr);
 }
 
@@ -110,19 +122,27 @@ int MemoryManager::getContiguousIndexMemory(int size, MemoryType type) // TODO: 
     }
   }
 
-  return startPos;
+  if (emptyCount >= size) return startPos;
+  return -1;
 }
 
 void MemoryManager::compactMemory(MemoryType type)
 {
-  print("MemoryManager::compactMemory(); type: " + to_string(type));
   int writeIndex = 0;
   auto memory = type == REALTIME ? this->realtimeMemory : this->userMemory;
   auto memorySize = type == REALTIME ? this->realtimeMemorySize : this->userMemorySize;
 
+  auto lastPID = -1;
   for (int i = 0; i < memorySize; i++) {
-    if (memory[i] != -1)
+    if (memory[i] != -1) {
       memory[writeIndex++] = memory[i];
+      
+      // update offset of process
+      if (lastPID != memory[i]) {
+        lastPID = memory[i];
+        *processOffsets[lastPID] = writeIndex - 1;
+      }
+    }
   }
 
   for (; writeIndex < memorySize; writeIndex++) {

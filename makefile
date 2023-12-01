@@ -12,5 +12,5 @@ debug:
 clear:
 	rm -f $(TARGET)
 
-main.exe: ./src/$(TARGET).cpp
+main.exe: $(FILES) ./src/main.cpp
 	g++ $(FLAGS) $(FILES) -g ./src/main.cpp -o $(TARGET)
