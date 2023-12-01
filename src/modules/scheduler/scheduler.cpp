@@ -8,10 +8,11 @@ Scheduler::Scheduler(TimePoint startTime)
   this->startTime = startTime;
 }
 
-void Scheduler::addReadyProcess(Process *process)
+void Scheduler::addReadyProcess(Process *process, bool increasePriority)
 {
   std::lock_guard<std::mutex> lock(schedulerMutex);
   printd("Scheduler::addReadyProcess; PID: " + to_string(process->getPID()));
+  if (increasePriority) process->increasePriority();
   this->readyQueue.push(process);
 }
 

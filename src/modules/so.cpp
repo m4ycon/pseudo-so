@@ -63,7 +63,8 @@ void SO::handleRealtimeProcess(Process *process)
 void SO::handleUserProcess(Process *process)
 {
   auto startTime = Utils::now();
-  while (!process->isFinished() && Utils::getElapsedTime(startTime) < QUANTUM) {
+  auto quantum = QUANTUM * process->getPriority(); // quantum is proportional to the priority
+  while (!process->isFinished() && Utils::getElapsedTime(startTime) < quantum) {
     this->cpu->execProcess(process);
   }
 }
@@ -79,7 +80,7 @@ void SO::deliverProcess(Process *process)
   this->getProcessResources(process);
   this->dispatcherPrint(process);
 
-  this->scheduler->addReadyProcess(process);
+  this->scheduler->addReadyProcess(process, false);
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }
 
