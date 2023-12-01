@@ -32,7 +32,7 @@ private:
   void handleUserProcess(Process *process);
 
   void deliverProcess(Process *process);
-  void dispatcherPrint(Process *process);
   bool getProcessResources(Process *process);
   void freeProcessResources(Process *process);
+  void dispatcherPrint(Process *process);
 };

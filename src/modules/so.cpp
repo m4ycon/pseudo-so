@@ -80,6 +80,33 @@ void SO::deliverProcess(Process *process)
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }
 
+bool SO::getProcessResources(Process *process)
+{
+  std::lock_guard<std::mutex> lock(this->gettingProcessResourcesMutex);
+
+  bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
+  if (!allocateMemSuccess) {
+    printd("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
+    return false;
+  }
+  
+  bool requestResourceSuccess = this->resourceManager->requestResource(process);
+  if (!requestResourceSuccess) {
+    while (!this->memoryManager->freeMemory(process));
+    printd("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
+    return false;
+  }
+
+  return true;
+}
+
+void SO::freeProcessResources(Process *process)
+{
+  std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
+  while (!this->memoryManager->freeMemory(process));
+  while (!this->resourceManager->freeResource(process));
+}
+
 void SO::dispatcherPrint(Process *process)
 {
   /*
@@ -133,29 +160,3 @@ void SO::dispatcherPrint(Process *process)
   );
 }
 
-bool SO::getProcessResources(Process *process)
-{
-  std::lock_guard<std::mutex> lock(this->gettingProcessResourcesMutex);
-
-  bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
-  if (!allocateMemSuccess) {
-    printd("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
-    return false;
-  }
-  
-  bool requestResourceSuccess = this->resourceManager->requestResource(process);
-  if (!requestResourceSuccess) {
-    while (!this->memoryManager->freeMemory(process));
-    printd("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
-    return false;
-  }
-
-  return true;
-}
-
-void SO::freeProcessResources(Process *process)
-{
-  std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
-  while (!this->memoryManager->freeMemory(process));
-  while (!this->resourceManager->freeResource(process));
-}
