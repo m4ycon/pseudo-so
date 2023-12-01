@@ -18,7 +18,7 @@ bool MemoryManager::freeMemory(Process *process)
   if (!memoryMutex.try_lock()) return false;
   std::lock_guard<std::mutex> lock(memoryMutex, std::adopt_lock);
 
-  if (process->getPriority() == 0) {
+  if (process->isRealtime()) {
     usedRealtimeMemorySize -= process->getMemoryBlock();
 
     for (int i = 0; i < process->getMemoryBlock(); i++)
@@ -44,7 +44,7 @@ bool MemoryManager::allocateMemory(Process *process)
 
   auto pid = process->getPID();
 
-  if (process->getPriority() == 0) {
+  if (process->isRealtime()) {
     if (usedRealtimeMemorySize + process->getMemoryBlock() > realtimeMemorySize) {
       return false;
     } else {
@@ -87,7 +87,7 @@ bool MemoryManager::allocateMemory(Process *process)
 
 bool MemoryManager::isThereEnoughMemory(Process *process)
 {
-  const auto type = process->getPriority() == 0 ? REALTIME : USER;
+  const auto type = process->isRealtime() ? REALTIME : USER;
   const auto memoryBlockSize = process->getMemoryBlock();
 
   return type == REALTIME

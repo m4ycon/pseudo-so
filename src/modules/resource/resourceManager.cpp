@@ -11,7 +11,7 @@ bool ResourceManager::requestResource(Process *process)
   if (!resource_mutex.try_lock()) return false;
   std::lock_guard<std::mutex> lock(resource_mutex, std::adopt_lock);
 
-  if (process->getPriority() == 0) return true;
+  if (process->isRealtime()) return true;
   if (!checkEnoughResources(process)) return false;
 
   auto pid = process->getPID();
@@ -51,7 +51,7 @@ bool ResourceManager::freeResource(Process *process)
   if (!resource_mutex.try_lock()) return false;
   std::lock_guard<std::mutex> lock(resource_mutex, std::adopt_lock);
   
-  if (process->getPriority() == 0) return true;
+  if (process->isRealtime()) return true;
 
   auto pid = process->getPID();
 
@@ -87,7 +87,7 @@ bool ResourceManager::freeResource(Process *process)
 
 bool ResourceManager::checkEnoughResources(Process *process)
 {
-  if (process->getPriority() == 0) return true;
+  if (process->isRealtime()) return true;
 
   auto is_printer_code_requested = process->getPrinterCodeRequest();
   auto is_scanner_requested = process->getScannerRequest();

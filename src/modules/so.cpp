@@ -33,7 +33,7 @@ void SO::exec()
     auto elapsedTime = Utils::getElapsedTime(this->startTime);
     print("SO::exec - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(elapsedTime) + "ms");
 
-    if (process->getPriority() == 0) {
+    if (process->isRealtime()) {
       this->handleRealtimeProcess(process);
 
       processes_finished++;

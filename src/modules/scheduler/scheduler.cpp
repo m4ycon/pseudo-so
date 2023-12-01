@@ -66,13 +66,12 @@ void Scheduler::addProcess(Process *process)
 {
   printd("Scheduler::addProcess; PID: " + to_string(process->getPID()));
 
-  auto priority = process->getPriority();
-
-  if (priority == 0 && realtimeQueue.size() < MAX_QUEUE_SIZE) {
+  if (process->isRealtime() && realtimeQueue.size() < MAX_QUEUE_SIZE) {
     realtimeQueue.push(process);
     return;
   }
 
+  auto priority = process->getPriority();
   if (priority == 1 && userQueue1.size() < MAX_QUEUE_SIZE) {
     userQueue1.push(process);
     return;

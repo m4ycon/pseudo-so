@@ -23,6 +23,8 @@ public:
   bool getModemRequest() { return this->modem_request; }
   int getDiskCode() { return this->disk_code; }
 
+  const bool isRealtime() { return this->priority == 0; }
+
   void increasePriority();
 
   void addInstruction(Instruction *instruction);
