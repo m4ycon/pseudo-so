@@ -76,18 +76,12 @@ bool MemoryManager::isThereEnoughTotalMemory(Process *process)
 
 void MemoryManager::printMemory()
 {
-  string printStr = "";
+  string separator(1, SEPARATOR);
+  string printStr = separator;
   for (int i = 0; i < this->realtimeMemorySize; i++)
-    printStr += to_string(this->realtimeMemory[i]) + SEPARATOR;
+    printStr += to_string(this->realtimeMemory[i]) + separator;
   for (int i = 0; i < this->userMemorySize; i++)
-    printStr += to_string(this->userMemory[i]) + SEPARATOR;
-  print(printStr);
-
-  // print map offset
-  printStr = "";
-  for (auto it = this->processOffsets.begin(); it != this->processOffsets.end(); ++it) {
-    printStr += to_string(it->first) + ":" + to_string(*it->second) + SEPARATOR;
-  }
+    printStr += to_string(this->userMemory[i]) + separator;
   print(printStr);
 }
 

@@ -64,9 +64,10 @@ File *FileManager::getFile(char filename)
 
 void FileManager::printDisk()
 {
-  string printStr = to_string(SEPARATOR);
+  string separator(1, SEPARATOR);
+  string printStr = separator;
   for (int i = 0; i < this->disk_size; i++)
-    printStr += this->disk_blocks[i] + SEPARATOR;
+    printStr += this->disk_blocks[i] + separator;
   print(printStr);
 }
 

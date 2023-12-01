@@ -51,6 +51,9 @@ void SO::exec()
       }
     }
   }
+
+  print("Mapa de ocupação do disco:");
+  this->fileManager->printDisk();
 }
 
 void SO::handleRealtimeProcess(Process *process)
