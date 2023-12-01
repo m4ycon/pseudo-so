@@ -20,11 +20,15 @@ public:
   void freeMemory(Process *process);
   bool allocateMemory(Process *process);
 
+  int getContiguousIndexMemory(int size, string type);
+  void compactMemoryReal();
+  void compactMemoryUser();
+
   void printMemory();
 
 private:
   int realtimeMemorySize, userMemorySize;
   int usedRealtimeMemorySize = 0, usedUserMemorySize = 0;
 
-  char realtimeMemory[DEF_MEMORY_SIZE], userMemory[DEF_MEMORY_SIZE];
+  int realtimeMemory[DEF_MEMORY_SIZE], userMemory[DEF_MEMORY_SIZE];
 };
