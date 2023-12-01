@@ -18,7 +18,7 @@ MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 void MemoryManager::freeMemory(Process *process)
 {
   std::lock_guard<std::mutex> lock(memoryMutex);
-  if (process->getPriority() == 0 ){
+  if (process->getPriority() == 0) {
     usedRealtimeMemorySize -= process->getMemoryBlock();
   } else {
     usedUserMemorySize -= process->getMemoryBlock();
@@ -29,15 +29,15 @@ void MemoryManager::freeMemory(Process *process)
 bool MemoryManager::allocateMemory(Process *process)
 {
   std::lock_guard<std::mutex> lock(memoryMutex);
-  if (process->getPriority() == 0 ){
-    if ((usedRealtimeMemorySize + process->getMemoryBlock()) > realtimeMemorySize){
+  if (process->getPriority() == 0) {
+    if (usedRealtimeMemorySize + process->getMemoryBlock() > realtimeMemorySize) {
       return false;
     } else {
       usedRealtimeMemorySize += process->getMemoryBlock();
       return true;
     }
   } else {
-    if ((usedUserMemorySize + process->getMemoryBlock()) > userMemorySize){
+    if (usedUserMemorySize + process->getMemoryBlock() > userMemorySize) {
       return false;
     } else {
       usedUserMemorySize += process->getMemoryBlock();

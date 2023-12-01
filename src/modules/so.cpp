@@ -37,7 +37,7 @@ void SO::exec()
 
       processes_finished++;
       print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
-      this->releaseProcessResources(process);
+      this->freeProcessResources(process);
     } else {
       this->handleUserProcess(process);
 
@@ -46,7 +46,7 @@ void SO::exec()
       } else {
         processes_finished++;
         print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
-        this->releaseProcessResources(process);
+        this->freeProcessResources(process);
       }
     }
   }
@@ -132,22 +132,22 @@ bool SO::getProcessResources(Process *process)
 {
   bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
   if (!allocateMemSuccess) {
-    printd("Não foi possível alocar memória para o processo " + to_string(process->getPID()));
+    print("Não foi possível alocar memória para o processo. PID: " + to_string(process->getPID()));
     return false;
   }
   
   bool requestResourceSuccess = this->resourceManager->requestResource(process);
   if (!requestResourceSuccess) {
     this->memoryManager->freeMemory(process);
-    printd("Não foi possível alocar recursos para o processo " + to_string(process->getPID()));
+    print("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
     return false;
   }
 
   return true;
 }
 
-void SO::releaseProcessResources(Process *process)
+void SO::freeProcessResources(Process *process)
 {
   this->memoryManager->freeMemory(process);
-  this->resourceManager->releaseResource(process);
+  this->resourceManager->freeResource(process);
 }

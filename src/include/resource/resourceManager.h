@@ -8,7 +8,7 @@ public:
   ResourceManager();
 
   bool requestResource(Process *process);
-  bool releaseResource(Process *process);
+  bool freeResource(Process *process);
 
 private:
   int printer_code_request_pid[2] = {-1, -1};

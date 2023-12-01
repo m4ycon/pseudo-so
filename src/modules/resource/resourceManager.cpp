@@ -40,7 +40,7 @@ bool ResourceManager::requestResource(Process *process)
   return true;
 }
 
-bool ResourceManager::releaseResource(Process *process)
+bool ResourceManager::freeResource(Process *process)
 {
   std::lock_guard<std::mutex> lock(resource_mutex);
   
