@@ -2,14 +2,11 @@
 #include "../common.h"
 #include "../process/process.h"
 
-/* Memória de 1024 blocos. Dessa quantidade, 64 blocos devem
-ser reservados para processos de tempo-real e os 960 blocos restantes devem ser compartilhados entre os
-processos de usuário */
-struct MemoryBlock
-{
-  int realMemory = 0;
-  int userMemory = 0;
 
+enum MemoryType
+{
+  REALTIME,
+  USER
 };
 
 class MemoryManager
@@ -17,12 +14,8 @@ class MemoryManager
 public:
   MemoryManager(int realtimeMemorySize, int userMemorySize);
 
-  void freeMemory(Process *process);
+  bool freeMemory(Process *process);
   bool allocateMemory(Process *process);
-
-  int getContiguousIndexMemory(int size, string type);
-  void compactMemoryReal();
-  void compactMemoryUser();
 
   void printMemory();
 
@@ -31,4 +24,7 @@ private:
   int usedRealtimeMemorySize = 0, usedUserMemorySize = 0;
 
   int realtimeMemory[DEF_MEMORY_SIZE], userMemory[DEF_MEMORY_SIZE];
+
+  int getContiguousIndexMemory(int size, MemoryType type);
+  void compactMemory(MemoryType type);
 };

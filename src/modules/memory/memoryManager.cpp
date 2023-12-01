@@ -15,9 +15,11 @@ MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
     this->userMemory[i] = -1;
 }
 
-void MemoryManager::freeMemory(Process *process)
+bool MemoryManager::freeMemory(Process *process)
 {
-  std::lock_guard<std::mutex> lock(memoryMutex);
+  if (!memoryMutex.try_lock()) return false;
+  std::lock_guard<std::mutex> lock(memoryMutex, std::adopt_lock);
+
   if (process->getPriority() == 0) {
     usedRealtimeMemorySize -= process->getMemoryBlock();
 
@@ -28,25 +30,28 @@ void MemoryManager::freeMemory(Process *process)
     usedUserMemorySize -= process->getMemoryBlock();
 
     for (int i = 0; i < process->getMemoryBlock(); i++)
-      this->userMemory[process->getOffset() + i - 64] = -1;
+      this->userMemory[process->getOffset() + i - this->realtimeMemorySize] = -1;
 
   }
 
+  return true;
 }
 
 bool MemoryManager::allocateMemory(Process *process)
 {
-  std::lock_guard<std::mutex> lock(memoryMutex);
+  if (!memoryMutex.try_lock()) return false;
+  std::lock_guard<std::mutex> lock(memoryMutex, std::adopt_lock);
+
   if (process->getPriority() == 0) {
     if (usedRealtimeMemorySize + process->getMemoryBlock() > realtimeMemorySize) {
       return false;
     } else {
       usedRealtimeMemorySize += process->getMemoryBlock();
 
-      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), "real");
+      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), REALTIME);
       if (startPos == -1) {
-        compactMemoryReal();
-        startPos = getContiguousIndexMemory(process->getMemoryBlock(), "real");
+        this->compactMemory(REALTIME);
+        startPos = getContiguousIndexMemory(process->getMemoryBlock(), REALTIME);
       }
 
       for (int i = 0; i < process->getMemoryBlock(); i++)
@@ -61,17 +66,17 @@ bool MemoryManager::allocateMemory(Process *process)
     } else {
       usedUserMemorySize += process->getMemoryBlock();
 
-      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), "user");
+      auto startPos = getContiguousIndexMemory(process->getMemoryBlock(), USER);
       if (startPos == -1) {
-        compactMemoryUser();
-        startPos = getContiguousIndexMemory(process->getMemoryBlock(), "user");
+        this->compactMemory(USER);
+        startPos = getContiguousIndexMemory(process->getMemoryBlock(), USER);
       }
 
       for (int i = 0; i < process->getMemoryBlock(); i++)
         this->userMemory[startPos + i] = 1;
       process->setOffset(startPos);
 
-      process->setOffset( startPos + 64);
+      process->setOffset(startPos + this->realtimeMemorySize);
       return true;
     }
   }
@@ -89,63 +94,40 @@ void MemoryManager::printMemory()
   print(printStr);
 }
 
-int MemoryManager::getContiguousIndexMemory(int size, string type) // TODO: fazer com ponteiros mais simplificado
+int MemoryManager::getContiguousIndexMemory(int size, MemoryType type) // TODO: fazer com ponteiros mais simplificado
 { 
   int emptyCount = 0, startPos = -1;
+  auto memory = type == REALTIME ? this->realtimeMemory : this->userMemory;
+  auto memorySize = type == REALTIME ? this->realtimeMemorySize : this->userMemorySize;
 
-  if (type == "real") {
-    for (int i = 0; i < this->realtimeMemorySize; ++i) {
-      if (this->realtimeMemory[i] == -1) {
-        if (startPos == -1) {
-          startPos = i;
-        }
-        emptyCount++;
-      } else {
-        if (emptyCount >= size) break;
-        emptyCount = 0, startPos = -1;
+  for (int i = 0; i < memorySize; ++i) {
+    if (memory[i] == -1) {
+      if (startPos == -1) {
+        startPos = i;
       }
-    }
-  } else {
-    for (int i = 0; i < this->userMemorySize; ++i) {
-      if (this->userMemory[i] == -1) {
-        if (startPos == -1) {
-          startPos = i;
-        }
-        emptyCount++;
-      } else {
-        if (emptyCount >= size) break;
-        emptyCount = 0, startPos = -1;
-      }
+      emptyCount++;
+    } else {
+      if (emptyCount >= size) break;
+      emptyCount = 0, startPos = -1;
     }
   }
 
   return startPos;
 }
 
-void MemoryManager::compactMemoryReal() // TODO: fazer com ponteiros mais simplificado
+void MemoryManager::compactMemory(MemoryType type)
 {
+  print("MemoryManager::compactMemory(); type: " + to_string(type));
   int writeIndex = 0;
+  auto memory = type == REALTIME ? this->realtimeMemory : this->userMemory;
+  auto memorySize = type == REALTIME ? this->realtimeMemorySize : this->userMemorySize;
 
-  for (int i = 0; i < this->realtimeMemorySize; i++) {
-    if (this->realtimeMemory[i] != -1)
-      this->realtimeMemory[writeIndex++] = this->realtimeMemory[i];
+  for (int i = 0; i < memorySize; i++) {
+    if (memory[i] != -1)
+      memory[writeIndex++] = memory[i];
   }
 
-  for (; writeIndex < this->realtimeMemorySize; writeIndex++) {
-    this->realtimeMemory[writeIndex] = -1;
-  }
-}
-
-void MemoryManager::compactMemoryUser() 
-{
-  int writeIndex = 0;
-
-  for (int i = 0; i < this->userMemorySize; i++) {
-    if (this->userMemory[i] != -1)
-      this->userMemory[writeIndex++] = this->userMemory[i];
-  }
-
-  for (; writeIndex < this->userMemorySize; writeIndex++) {
-    this->userMemory[writeIndex] = -1;
+  for (; writeIndex < memorySize; writeIndex++) {
+    memory[writeIndex] = -1;
   }
 }

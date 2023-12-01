@@ -8,7 +8,8 @@ ResourceManager::ResourceManager()
 
 bool ResourceManager::requestResource(Process *process)
 {
-  std::lock_guard<std::mutex> lock(resource_mutex);
+  if (!resource_mutex.try_lock()) return false;
+  std::lock_guard<std::mutex> lock(resource_mutex, std::adopt_lock);
 
   if (process->getPriority() == 0) return true;
   if (!checkEnoughResources(process)) return false;
@@ -47,7 +48,8 @@ bool ResourceManager::requestResource(Process *process)
 
 bool ResourceManager::freeResource(Process *process)
 {
-  std::lock_guard<std::mutex> lock(resource_mutex);
+  if (!resource_mutex.try_lock()) return false;
+  std::lock_guard<std::mutex> lock(resource_mutex, std::adopt_lock);
   
   if (process->getPriority() == 0) return true;
 

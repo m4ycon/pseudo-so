@@ -141,7 +141,7 @@ bool SO::getProcessResources(Process *process)
   
   bool requestResourceSuccess = this->resourceManager->requestResource(process);
   if (!requestResourceSuccess) {
-    this->memoryManager->freeMemory(process);
+    while (!this->memoryManager->freeMemory(process));
     printd("Não foi possível alocar recursos para o processo. PID: " + to_string(process->getPID()));
     return false;
   }
@@ -152,6 +152,6 @@ bool SO::getProcessResources(Process *process)
 void SO::freeProcessResources(Process *process)
 {
   std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
-  this->memoryManager->freeMemory(process);
-  this->resourceManager->freeResource(process);
+  while (!this->memoryManager->freeMemory(process));
+  while (!this->resourceManager->freeResource(process));
 }
