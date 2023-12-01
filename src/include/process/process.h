@@ -13,7 +13,12 @@ public:
   int getPriority() { return this->priority; }
   int getStartupTime() { return this->startup_time; }
   int getMemoryBlock() { return this->memory_blocks; }
+  int getProcessorTime() { return this->processor_time; }
   
+  bool getPrinterCode() { return this->printer_code_requested; }
+  bool getScannerRequest() { return this->scanner_request; }
+  bool getModemRequest() { return this->modem_request; }
+
   void increasePriority();
 
   void addInstruction(Instruction *instruction);
@@ -29,7 +34,7 @@ private:
   int startup_time;
   int processor_time;
   int memory_blocks;
-
+  
   bool printer_code_requested;
   bool scanner_request;
   bool modem_request;

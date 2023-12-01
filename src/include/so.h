@@ -29,4 +29,5 @@ private:
   void handleUserProcess(Process *process);
 
   void deliverProcess(Process *process);
+  void dispatcherPrint(Process *process);
 };

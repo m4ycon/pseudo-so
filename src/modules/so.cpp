@@ -75,6 +75,55 @@ void SO::deliverProcess(Process *process)
     print("Não foi possível alocar memória para o processo " + to_string(process->getPID()));
     return ;
   }
+  dispatcherPrint(process);
   this->scheduler->addReadyProcess(process);
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
+}
+
+void SO::dispatcherPrint(Process *process)
+{
+  /* dispatcher =>
+ PID: 0
+ offset: 0
+ blocks: 64
+ priority: 0
+ time: 3
+ printers: 0
+ scanners: 0
+ modems: 0
+ drives: 0
+process 0 =>
+P0 STARTED
+P0 instruction 1
+P0 instruction 2
+P0 instruction 3
+P0 return SIGINT */
+  string PID = to_string(process->getPID());
+  string priority = to_string(process->getPriority());  
+  string memoryBlocks = to_string(process->getMemoryBlock());
+  string processor_time = to_string(process->getProcessorTime());
+  string printer_code_requested = process->getPrinterCode() ? "1" : "0";
+  string scanner_request = process->getScannerRequest() ? "1" : "0";
+  string modem_request = process->getModemRequest() ? "1" : "0";
+  string instructions = "";
+
+  for (int i = 1; i <= process->getProcessorTime(); i++) {
+    instructions += "P" + PID + " instruction " + to_string(i) + "\n";
+  }
+
+  print("\ndispatcher =>\n" 
+    "    PID: " + PID + "\n"
+    "    offset: 0" + "\n"
+    "    blocks: " + memoryBlocks + "\n"
+    "    priority: " + priority + "\n"
+    "    time: " + processor_time + "\n"
+    "    printers: " + printer_code_requested + "\n"
+    "    scanners: " + scanner_request + "\n"
+    "    modems: " + modem_request + "\n"
+    "    drives: 0\n\n"
+    "process " + PID + " =>\n"
+    "P" + PID + " STARTED" + "\n"
+    "" + instructions + ""
+    "P" + PID + " return SIGINT" + "\n"
+  ); 
 }
