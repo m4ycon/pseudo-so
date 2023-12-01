@@ -10,7 +10,7 @@ Process::Process(int startup_time, int priority, int processor_time, int memory_
   this->startup_time = startup_time;
   this->processor_time = processor_time;
   this->memory_blocks = memory_blocks;
-  this->printer_code_requested = printer_code_requested;
+  this->printer_code_request = printer_code_requested;
   this->scanner_request = scanner_request;
   this->modem_request = modem_request;
   this->disk_code = disk_code;

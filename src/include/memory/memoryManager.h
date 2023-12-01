@@ -18,7 +18,7 @@ public:
   MemoryManager(int realtimeMemorySize, int userMemorySize);
 
   void freeMemory(Process *process);
-  bool alocateMemory(Process *process);
+  bool allocateMemory(Process *process);
 
   void printMemory();
 

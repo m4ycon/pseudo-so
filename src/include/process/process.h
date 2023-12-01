@@ -14,10 +14,11 @@ public:
   int getStartupTime() { return this->startup_time; }
   int getMemoryBlock() { return this->memory_blocks; }
   int getProcessorTime() { return this->processor_time; }
-  
-  bool getPrinterCode() { return this->printer_code_requested; }
+
+  bool getPrinterCodeRequest() { return this->printer_code_request; }
   bool getScannerRequest() { return this->scanner_request; }
   bool getModemRequest() { return this->modem_request; }
+  int getDiskCode() { return this->disk_code; }
 
   void increasePriority();
 
@@ -34,11 +35,10 @@ private:
   int startup_time;
   int processor_time;
   int memory_blocks;
-  
-  bool printer_code_requested;
+
+  bool printer_code_request;
   bool scanner_request;
   bool modem_request;
-
   int disk_code;
 
   vector<Instruction *> instructions;

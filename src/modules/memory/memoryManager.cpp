@@ -26,7 +26,7 @@ void MemoryManager::freeMemory(Process *process)
 
 }
 
-bool MemoryManager::alocateMemory(Process *process)
+bool MemoryManager::allocateMemory(Process *process)
 {
   std::lock_guard<std::mutex> lock(memoryMutex);
   if (process->getPriority() == 0 ){

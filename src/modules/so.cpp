@@ -37,7 +37,7 @@ void SO::exec()
 
       processes_finished++;
       print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
-      this->memoryManager->freeMemory(process);
+      this->releaseProcessResources(process);
     } else {
       this->handleUserProcess(process);
 
@@ -46,7 +46,7 @@ void SO::exec()
       } else {
         processes_finished++;
         print("SO::exec - finished; PID: " + to_string(process->getPID()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
-        this->memoryManager->freeMemory(process);
+        this->releaseProcessResources(process);
       }
     }
   }
@@ -70,12 +70,12 @@ void SO::handleUserProcess(Process *process)
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
-  bool allocateMemSuccess = this->memoryManager->alocateMemory(process);
-  if (!allocateMemSuccess) {
-    print("Não foi possível alocar memória para o processo " + to_string(process->getPID()));
-    return ;
+  bool gotResources = false;
+  while (!gotResources) {
+    gotResources = this->getProcessResources(process);
   }
   dispatcherPrint(process);
+
   this->scheduler->addReadyProcess(process);
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }
@@ -102,7 +102,7 @@ P0 return SIGINT */
   string priority = to_string(process->getPriority());  
   string memoryBlocks = to_string(process->getMemoryBlock());
   string processor_time = to_string(process->getProcessorTime());
-  string printer_code_requested = process->getPrinterCode() ? "1" : "0";
+  string printer_code_requested = process->getPrinterCodeRequest() ? "1" : "0";
   string scanner_request = process->getScannerRequest() ? "1" : "0";
   string modem_request = process->getModemRequest() ? "1" : "0";
   string instructions = "";
@@ -125,5 +125,29 @@ P0 return SIGINT */
     "P" + PID + " STARTED" + "\n"
     "" + instructions + ""
     "P" + PID + " return SIGINT" + "\n"
-  ); 
+  );
+}
+
+bool SO::getProcessResources(Process *process)
+{
+  bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
+  if (!allocateMemSuccess) {
+    printd("Não foi possível alocar memória para o processo " + to_string(process->getPID()));
+    return false;
+  }
+  
+  bool requestResourceSuccess = this->resourceManager->requestResource(process);
+  if (!requestResourceSuccess) {
+    this->memoryManager->freeMemory(process);
+    printd("Não foi possível alocar recursos para o processo " + to_string(process->getPID()));
+    return false;
+  }
+
+  return true;
+}
+
+void SO::releaseProcessResources(Process *process)
+{
+  this->memoryManager->freeMemory(process);
+  this->resourceManager->releaseResource(process);
 }
