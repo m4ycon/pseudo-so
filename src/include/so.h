@@ -34,5 +34,6 @@ private:
   void deliverProcess(Process *process);
   bool getProcessResources(Process *process);
   void freeProcessResources(Process *process);
+  bool isThereEnoughResources(Process *process);
   void dispatcherPrint(Process *process);
 };

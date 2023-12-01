@@ -1,5 +1,6 @@
 #include "../include/so.h"
 
+
 SO::SO()
 {
   this->startTime = Utils::now();
@@ -70,6 +71,11 @@ void SO::handleUserProcess(Process *process)
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
+  if (!this->isThereEnoughResources(process)) {
+    printd("Não há recursos suficientes para o processo. PID: " + to_string(process->getPID()));
+    return;
+  }
+
   bool gotResources = false;
   while (!gotResources) {
     gotResources = this->getProcessResources(process);
@@ -105,6 +111,14 @@ void SO::freeProcessResources(Process *process)
   std::lock_guard<std::mutex> lock(this->freeingProcessResourcesMutex);
   while (!this->memoryManager->freeMemory(process));
   while (!this->resourceManager->freeResource(process));
+}
+
+bool SO::isThereEnoughResources(Process *process)
+{
+  bool enough_memory = this->memoryManager->isThereEnoughMemory(process);
+  // TODO: check if there are enough resources in the resource manager
+
+  return enough_memory;
 }
 
 void SO::dispatcherPrint(Process *process)

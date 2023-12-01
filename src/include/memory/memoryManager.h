@@ -17,6 +17,8 @@ public:
   bool freeMemory(Process *process);
   bool allocateMemory(Process *process);
 
+  bool isThereEnoughMemory(Process *process);
+
   void printMemory();
 
 private:
@@ -27,6 +29,8 @@ private:
   map<int, int*> processOffsets;
 
   std::mutex memoryMutex;
+  std::binary_semaphore memorySem{1};
+
 
   int getContiguousIndexMemory(int size, MemoryType type);
   void compactMemory(MemoryType type);

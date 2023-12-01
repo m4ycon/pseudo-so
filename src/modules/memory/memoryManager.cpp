@@ -85,6 +85,16 @@ bool MemoryManager::allocateMemory(Process *process)
   }
 }
 
+bool MemoryManager::isThereEnoughMemory(Process *process)
+{
+  const auto type = process->getPriority() == 0 ? REALTIME : USER;
+  const auto memoryBlockSize = process->getMemoryBlock();
+
+  return type == REALTIME
+    ? memoryBlockSize <= realtimeMemorySize
+    : memoryBlockSize <= userMemorySize;
+}
+
 void MemoryManager::printMemory()
 {
   printd("FileManager::printDisk()");
