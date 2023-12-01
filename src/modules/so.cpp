@@ -106,6 +106,7 @@ P0 return SIGINT */
   string scanner_request = process->getScannerRequest() ? "1" : "0";
   string modem_request = process->getModemRequest() ? "1" : "0";
   string instructions = "";
+  string offset = to_string(process->getOffset());
 
   for (int i = 1; i <= process->getProcessorTime(); i++) {
     instructions += "P" + PID + " instruction " + to_string(i) + "\n";
@@ -113,7 +114,7 @@ P0 return SIGINT */
 
   print("\ndispatcher =>\n" 
     "    PID: " + PID + "\n"
-    "    offset: 0" + "\n"
+    "    offset: " + offset + "\n"
     "    blocks: " + memoryBlocks + "\n"
     "    priority: " + priority + "\n"
     "    time: " + processor_time + "\n"

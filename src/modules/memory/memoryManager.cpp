@@ -34,6 +34,7 @@ bool MemoryManager::allocateMemory(Process *process)
       return false;
     } else {
       usedRealtimeMemorySize += process->getMemoryBlock();
+      process->setOffset( usedRealtimeMemorySize - process->getMemoryBlock());
       return true;
     }
   } else {
@@ -41,6 +42,7 @@ bool MemoryManager::allocateMemory(Process *process)
       return false;
     } else {
       usedUserMemorySize += process->getMemoryBlock();
+      process->setOffset( (usedUserMemorySize - process->getMemoryBlock()) + 65);
       return true;
     }
   }
