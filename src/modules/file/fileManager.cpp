@@ -20,6 +20,7 @@ FileManager::FileManager(int disk_size, vector<File *> files)
 FileActionCode FileManager::addFile(File *file)
 {
   if (file->size > this->remaining_size) return NOT_ENOUGH_SPACE;
+  if (getFile(file->filename) != nullptr) return FILE_ALREADY_EXISTS;
 
   auto startPos = getContiguousIndex(file->size);
   if (startPos == -1) {

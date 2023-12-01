@@ -48,6 +48,11 @@ void CPU::opcode0(Instruction *instruction)
     print("O processo " + to_string(instruction->pid) + " não pode criar o arquivo " + instruction->filename + " (falta de espaço).");
     return;
   }
+
+  if (resCode == FILE_ALREADY_EXISTS) {
+    print("O processo " + to_string(instruction->pid) + " não pode criar o arquivo " + instruction->filename + " (arquivo já existe).");
+    return;
+  }
 }
 
 void CPU::opcode1(Instruction *instruction)

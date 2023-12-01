@@ -8,6 +8,7 @@ enum FileActionCode
   OK,
   FILE_NOT_FOUND,
   NOT_ENOUGH_SPACE,
+  FILE_ALREADY_EXISTS
 };
 class FileManager
 {
