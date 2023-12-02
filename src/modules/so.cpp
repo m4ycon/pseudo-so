@@ -90,11 +90,11 @@ void SO::deliverProcess(Process *process)
 bool SO::getProcessResources(Process *process)
 {
   while (true) {
-    this->gettingProcessResourcesSemaphore.acquire();
+    gettingProcessResourcesMutex.lock();
 
     bool allocateMemSuccess = this->memoryManager->allocateMemory(process);
     if (!allocateMemSuccess) {
-      this->gettingProcessResourcesSemaphore.release();
+      gettingProcessResourcesMutex.unlock();
       continue;
     }
     
@@ -102,32 +102,19 @@ bool SO::getProcessResources(Process *process)
     if (!requestResourceSuccess) {
       while (!this->memoryManager->freeMemory(process));
 
-      this->gettingProcessResourcesSemaphore.release();
+      gettingProcessResourcesMutex.unlock();
       continue;
     }
 
-    this->gettingProcessResourcesSemaphore.release();
+    gettingProcessResourcesMutex.unlock();
     return true;
   }
 }
 
 void SO::freeProcessResources(Process *process)
 {
-  while (true) {
-    this->freeingProcessResourcesSemaphore.acquire();
-    bool freeMemorySuccess = this->memoryManager->freeMemory(process);
-    this->freeingProcessResourcesSemaphore.release();
-
-    if (freeMemorySuccess) break;
-  }
-
-  while (true) {
-    this->freeingProcessResourcesSemaphore.acquire();
-    bool freeResourceSuccess = this->resourceManager->freeResource(process);
-    this->freeingProcessResourcesSemaphore.release();
-
-    if (freeResourceSuccess) break;
-  }
+  while (!this->memoryManager->freeMemory(process));
+  while (!this->resourceManager->freeResource(process));
 }
 
 bool SO::isThereEnoughResources(Process *process)

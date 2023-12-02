@@ -25,9 +25,7 @@ private:
   TimePoint startTime;
   vector<Process *> processesToArrive;
 
-  std::binary_semaphore 
-    gettingProcessResourcesSemaphore{1},
-    freeingProcessResourcesSemaphore{1};
+  std::mutex gettingProcessResourcesMutex;
 
   void handleRealtimeProcess(Process *process);
   void handleUserProcess(Process *process);
