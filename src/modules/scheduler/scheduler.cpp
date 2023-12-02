@@ -14,13 +14,6 @@ void Scheduler::addReadyProcess(Process *process, bool increasePriority)
   this->readyQueue.push(process);
 }
 
-bool Scheduler::isEmpty()
-{
-  std::lock_guard<std::mutex> lock(schedulerMutex);
-  auto totalSize = readyQueue.size() + realtimeQueue.size() + userQueue1.size() + userQueue2.size() + userQueue3.size();
-  return totalSize == 0;
-}
-
 Process *Scheduler::getNextProcess()
 {
   std::lock_guard<std::mutex> lock(schedulerMutex);

@@ -75,7 +75,10 @@ void SO::handleUserProcess(Process *process)
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
-  if (!this->isThereEnoughResources(process)) return;
+  if (!this->isThereEnoughResources(process)) {
+    print("Não há recursos suficientes para o processo " + to_string(process->getPID()) + ".");
+    return;
+  }
 
   this->getProcessResources(process);
   this->dispatcherPrint(process);
@@ -125,8 +128,6 @@ void SO::freeProcessResources(Process *process)
 
     if (freeResourceSuccess) break;
   }
-
-  this->freeingProcessResourcesSemaphore.release();
 }
 
 bool SO::isThereEnoughResources(Process *process)

@@ -8,7 +8,6 @@ public:
   Scheduler(TimePoint startTime);
 
   void addReadyProcess(Process *process, bool increasePriority = true);
-  bool isEmpty();
   Process *getNextProcess();
 
 private:
