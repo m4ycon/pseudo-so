@@ -27,7 +27,10 @@ void Scheduler::addReadyProcess(Process *process, bool increasePriority)
 }
 
 /**
- * @brief 
+ * @brief Esvazia a fila de pronto adicionando os procesos nas filas de 
+ *        prioridade. Além disso, retorna o primeiro processo da fila de maior
+ *        prioridade. Caso não tenha nenhum processos nas filas, retorna um
+ *        ponteiro nulo.
  * 
  * @return Process* 
  */

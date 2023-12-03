@@ -93,7 +93,9 @@ void SO::handleUserProcess(Process *process)
 }
 
 /**
- * @brief 
+ * @brief Espera o tempo de inicialização do processo, verifica-se existem
+ *        recusos o suficiente para o processo executar. Fica tentando alcocar
+ *        os recusos até conseguir e printa o dispatcher.
  * 
  * @param process 
  */
@@ -172,7 +174,7 @@ bool SO::isThereEnoughResources(Process *process)
 }
 
 /**
- * @brief 
+ * @brief Printa o dispatcher do processo
  * 
  * @param process 
  */
