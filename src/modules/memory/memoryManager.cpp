@@ -1,6 +1,11 @@
 #include "../../include/memory/memoryManager.h"
 
-
+/**
+ * @brief Construct a new Memory Manager:: Memory Manager object
+ * 
+ * @param realtimeMemorySize 
+ * @param userMemorySize 
+ */
 MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
 {
   this->realtimeMemorySize = realtimeMemorySize;
@@ -12,6 +17,14 @@ MemoryManager::MemoryManager(int realtimeMemorySize, int userMemorySize)
     this->userMemory[i] = -1;
 }
 
+/**
+ * @brief É passado um processo como argumento. Caso a memória esteja disponével,
+ *        o processo é desalocado da memória e retorna true; caso o contrário, 
+ *        ele retorna false.
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool MemoryManager::freeMemory(Process *process)
 {
   if (!memoryMutex.try_lock()) return false;
@@ -32,6 +45,14 @@ bool MemoryManager::freeMemory(Process *process)
   return true;
 }
 
+/**
+ * @brief É passado um processo como argumento o qual será alocado na memória.
+ *        Caso seja bem sucedido, retorna true. Caso a memória não esteja 
+ *        disponível ou não tenha espaço o suficiente, retorna false.
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool MemoryManager::allocateMemory(Process *process)
 {
   if (!memoryMutex.try_lock()) return false;
@@ -63,6 +84,16 @@ bool MemoryManager::allocateMemory(Process *process)
   return true;
 }
 
+
+/**
+ * @brief Verifica se o processo não é maior que o tamanho total da memória. 
+ *        Caso seja, retorna false; caso o contrário, retorna true.
+ *        
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool MemoryManager::isThereEnoughTotalMemory(Process *process)
 {
   // no need to lock, because only checks total size and not what is inside
@@ -74,6 +105,9 @@ bool MemoryManager::isThereEnoughTotalMemory(Process *process)
     : memoryBlockSize <= userMemorySize;
 }
 
+/**
+ * @brief printa na tela o estado da memória naquele momento
+ */
 void MemoryManager::printMemory()
 {
   string separator(1, SEPARATOR);
@@ -85,6 +119,15 @@ void MemoryManager::printMemory()
   print(printStr);
 }
 
+/**
+ * @brief Dado o tipo de memória, procura um segmento livre de tamanho igual
+ *        ou maior que o tamanho passado como argumento e retorna o indice do
+ *        começo do segmento. Caso não encontre, retorna -1
+ * 
+ * @param size 
+ * @param type 
+ * @return int 
+ */
 int MemoryManager::getContiguousIndexMemory(int size, MemoryType type)
 { 
   int emptyCount = 0, startPos = -1;
@@ -107,6 +150,12 @@ int MemoryManager::getContiguousIndexMemory(int size, MemoryType type)
   return -1;
 }
 
+/**
+ * @brief Dado o tipo de memória, compacta a respectiva memória deixando
+ *        os blocos vazios a direita (se existirem)
+ * 
+ * @param type 
+ */
 void MemoryManager::compactMemory(MemoryType type)
 {
   int writeIndex = 0;
