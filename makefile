@@ -7,8 +7,6 @@ all:
 	g++ $(FLAGS) $(FILES) ./src/main.cpp -o $(TARGET)
 run:
 	./$(TARGET) ./input/processes.txt ./input/files.txt
-clear:
-	rm -f $(TARGET)
 
 # Debug
 main.exe: $(FILES) ./src/main.cpp

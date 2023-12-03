@@ -1,14 +1,28 @@
 # pseudo-so
 
-Para rodar o projeto é simples, rode os comando do makefile no terminal:
+## Requisitos
 
-```make``` -> Compila o programa, liga os aqruivos .h.
-```make all``` -> Compila o programa, liga os aqruivos .h.
-```make run``` -> roda o programa e liga os dois arquivos de entrar na pasta **input** .
+Para rodar o projeto é necessário ter instalado:
 
-```make all run``` -> compila e roda .
-```make debug``` -> roda o programa no modo debug com prints especiais declaradas dentro de um mutex.
+- [make](https://www.gnu.org/software/make/)
+- [Compilador g++](https://gcc.gnu.org/)
 
-# Depedências:
-O projeto foi implementado em:
-- g++ -Wall -std=c++20
+
+## Como rodar
+Para rodar o projeto é simples, na raiz do projeto rode os comando do makefile no terminal:
+
+
+```bash
+# Compila o programa
+make
+
+# Roda o programa compilado com os dois arquivos de entrada
+./main processes.txt files.txt
+```
+
+## Outros comandos úteis:
+
+```bash
+# Roda o programa compilado com os dois arquivos padrão de entrada (./input/processes.txt e ./input/files.txt)
+make run
+```
