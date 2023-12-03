@@ -1,6 +1,11 @@
 #include "../include/so.h"
 
-
+/**
+ * @brief Construct a new SO::SO object
+ * 
+ * @param processes_path 
+ * @param files_path 
+ */
 SO::SO(string processes_path, string files_path)
 {
   this->startTime = Utils::now();
@@ -22,6 +27,10 @@ SO::SO(string processes_path, string files_path)
   }
 }
 
+/**
+ * @brief faz a execução de todos os processos e termina quando todos forem
+ *        finalizados.
+ */
 void SO::exec()
 {
   auto processes_finished = 0;
@@ -56,6 +65,11 @@ void SO::exec()
   this->fileManager->printDisk();
 }
 
+/**
+ * @brief executa um processo de realtime e para até q seja finalizado
+ * 
+ * @param process 
+ */
 void SO::handleRealtimeProcess(Process *process)
 {
   while (!process->isFinished()) {
@@ -63,6 +77,12 @@ void SO::handleRealtimeProcess(Process *process)
   }
 }
 
+/**
+ * @brief executa um processo de usuário e para quando, ou o processo é
+ *        finalizado ou se ele estoura o tempo limite de tempo
+ * 
+ * @param process 
+ */
 void SO::handleUserProcess(Process *process)
 {
   auto startTime = Utils::now();
@@ -72,6 +92,13 @@ void SO::handleUserProcess(Process *process)
   }
 }
 
+/**
+ * @brief Espera o tempo de inicialização do processo, verifica-se existem
+ *        recusos o suficiente para o processo executar. Fica tentando alcocar
+ *        os recusos até conseguir e printa o dispatcher.
+ * 
+ * @param process 
+ */
 void SO::deliverProcess(Process *process)
 {
   Utils::sleep(process->getStartupTime());
@@ -87,6 +114,15 @@ void SO::deliverProcess(Process *process)
   print("SO::deliverProcess - PID: " + to_string(process->getPID()) + "; Priority: " + to_string(process->getPriority()) + "; Time: " + to_string(Utils::getElapsedTime(this->startTime)) + "ms");
 }
 
+
+/**
+ * @brief acoloca todos os recusos que o processo necessita e retorna true 
+ *        quando conseguir
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool SO::getProcessResources(Process *process)
 {
   while (true) {
@@ -111,12 +147,24 @@ bool SO::getProcessResources(Process *process)
   }
 }
 
+/**
+ * @brief desaloca os recusos que foram alocados para um processo
+ * 
+ * @param process 
+ */
 void SO::freeProcessResources(Process *process)
 {
   while (!this->memoryManager->freeMemory(process));
   while (!this->resourceManager->freeResource(process));
 }
 
+/**
+ * @brief verifica se exite recusos necesarios para um processo
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool SO::isThereEnoughResources(Process *process)
 {
   bool enough_memory = this->memoryManager->isThereEnoughTotalMemory(process);
@@ -125,6 +173,11 @@ bool SO::isThereEnoughResources(Process *process)
   return enough_memory;
 }
 
+/**
+ * @brief Printa o dispatcher do processo
+ * 
+ * @param process 
+ */
 void SO::dispatcherPrint(Process *process)
 {
   /*

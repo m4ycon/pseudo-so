@@ -1,10 +1,23 @@
 #include "../../include/resource/resourceManager.h"
 
-
+/**
+ * @brief Construct a new Resource Manager:: Resource Manager object
+ */
 ResourceManager::ResourceManager()
 {
 }
 
+/**
+ * @brief O processo solicita um recuso. Caso seja um processo realtime,
+ *        retorna true. Caso o(s) recuso(s) requerido(s) pelo processo de 
+ *        usuário estejam disponíveis, retorna true. Caso um outro processo 
+ *        esteja requerendo no momento um recuso ou os recusos requeridos não 
+ *        estão disponíveis, retorna false.
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool ResourceManager::requestResource(Process *process)
 {
   if (!resource_mutex.try_lock()) return false;
@@ -45,6 +58,15 @@ bool ResourceManager::requestResource(Process *process)
   return true;
 }
 
+/**
+ * @brief Um processo libera os recusos que estava utilizando. Caso um outro
+ *        processo esteja requerendo/liberando recusos no mesmo momento, 
+ *        retorna false. Caso o contrário, retorna true.
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool ResourceManager::freeResource(Process *process)
 {
   if (!resource_mutex.try_lock()) return false;
@@ -84,6 +106,16 @@ bool ResourceManager::freeResource(Process *process)
   return true;
 }
 
+
+/**
+ * @brief Verifica se os todos os recusos reqeridos pelo processo estão 
+ *        disponíveis. Caso afirmativo, retorna true; caso negativo retorna 
+ *        false.
+ * 
+ * @param process 
+ * @return true 
+ * @return false 
+ */
 bool ResourceManager::checkEnoughResources(Process *process)
 {
   if (process->isRealtime()) return true;
