@@ -10,12 +10,12 @@ public:
   CPU(FileManager *fileManager, TimePoint startTime);
 
   void execProcess(Process *process);
-  void execInstruction(Instruction *instruction);
 
 private:
   TimePoint startTime;
   FileManager *fileManager;
 
+  void execInstruction(Instruction *instruction);
   void opcode0(Instruction *instruction);
   void opcode1(Instruction *instruction);
 };
