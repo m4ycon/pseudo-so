@@ -19,7 +19,6 @@ void print(const std::string &message, bool endline)
   }
 #else
   #include <unistd.h> // Linux
-#include "utils.h"
   void Utils::sleep(double seconds)
   {
     usleep(seconds * 1e6); // microseconds
