@@ -1,5 +1,9 @@
 #include "../../include/utils/fileReader.h"
 
+/**
+ * @brief Funções utilizadas para ler os dados de arquivos de entrada
+ */
+
 pair<FileManager*, vector<Process*>> FileReader::setup(string processes_path, string files_path, Scheduler *scheduler)
 {
   auto processes = readProcesses(processes_path);

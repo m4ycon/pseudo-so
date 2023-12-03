@@ -2,6 +2,12 @@
 #include <iostream>
 #include <cstring>
 
+/**
+ * @brief Construct a new File Manager:: File Manager object
+ * 
+ * @param disk_size 
+ * @param files 
+ */
 FileManager::FileManager(int disk_size, vector<File *> files)
 {
   this->disk_size = disk_size;
@@ -16,7 +22,16 @@ FileManager::FileManager(int disk_size, vector<File *> files)
     this->remaining_size -= file->size;
   }
 }
-  
+
+/**
+ * @brief Salva um arquivo no disco e retorna OK se salvou corretamente,
+ *        NOT_ENOUGH_SPACE caso o arquivo for maior que o espaço
+ *        disponível ou FILE_ALREADY_EXISTS caso o arquivo tenha o mesmo
+ *        nome que um arquivo já existente.
+ * 
+ * @param file 
+ * @return FileActionCode 
+ */
 FileActionCode FileManager::addFile(File *file)
 {
   if (file->size > this->remaining_size) return NOT_ENOUGH_SPACE;
@@ -37,6 +52,13 @@ FileActionCode FileManager::addFile(File *file)
   return OK;
 }
 
+/**
+ * @brief Remove um arquivo já existente. Retorna OK caso a ação ocorreu
+ *        corretamente ou FILE_NOT_FOUND caso o arquivo não exista
+ * 
+ * @param filename 
+ * @return FileActionCode 
+ */
 FileActionCode FileManager::removeFile(char filename)
 {
   auto file = getFile(filename);
@@ -49,6 +71,13 @@ FileActionCode FileManager::removeFile(char filename)
   return OK;
 }
 
+/**
+ * @brief Procura por um arquivo no disco. Se encontrou, retorna um
+ *        ponteiro para ele; se não, retorna um ponteiro nulo
+ * 
+ * @param filename 
+ * @return File* 
+ */
 File *FileManager::getFile(char filename)
 {
   int start_block = -1, size = 0;
@@ -63,6 +92,9 @@ File *FileManager::getFile(char filename)
   return new File(filename, start_block, size);
 }
 
+/**
+ * @brief Printa na tela o estado do disco no momento
+ */
 void FileManager::printDisk()
 {
   string separator(1, SEPARATOR);
@@ -72,6 +104,14 @@ void FileManager::printDisk()
   print(printStr);
 }
 
+/**
+ * @brief retorna o primeiro indice de uma sequência vazia do disco
+ *        que seja maior ou igual ao tamanho passado como argumento.
+ *        Caso não encontre, retorna -1
+ * 
+ * @param size 
+ * @return int 
+ */
 int FileManager::getContiguousIndex(int size) {
   int emptyCount = 0, startPos = -1;
 
@@ -91,6 +131,9 @@ int FileManager::getContiguousIndex(int size) {
   return -1;
 }
 
+/**
+ * @brief Compacta o disco deixando os blocos vazios a direita (se existirem)
+ */
 void FileManager::compactDisk() {
   int writeIndex = 0;
 
