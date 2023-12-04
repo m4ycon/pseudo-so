@@ -7,8 +7,6 @@ class Process
 public:
   Process(int startup_time, int priority, int processor_time, int memory_blocks, bool printer_code_requested, bool scanner_request, bool modem_request, int disk_code);
 
-  void run();
-
   int getPID() { return this->PID; }
   int getPriority() { return this->priority; }
   int getStartupTime() { return this->startup_time; }

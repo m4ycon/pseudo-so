@@ -19,15 +19,15 @@ void print(const std::string &message, bool endline)
 
 #ifdef _WIN32
   #include <windows.h> // Windows
-  void Utils::sleep(double seconds)
+  void Utils::sleep(double milliseconds)
   {
-    Sleep(seconds * 1e3); // milliseconds
+    Sleep(milliseconds); // milliseconds
   }
 #else
   #include <unistd.h> // Linux
-  void Utils::sleep(double seconds)
+  void Utils::sleep(double milliseconds)
   {
-    usleep(seconds * 1e6); // microseconds
+    usleep(milliseconds * 1e3); // microseconds
   }
 #endif
 

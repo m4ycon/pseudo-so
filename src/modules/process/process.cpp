@@ -31,17 +31,6 @@ Process::Process(int startup_time, int priority, int processor_time, int memory_
 }
 
 /**
- * @brief Simula execução do processo
- */
-void Process::run()
-{
-  print("Process::run(); PID: " + to_string(this->PID) + "; start");
-  auto sleepTime = Utils::randomDouble(1, 5);
-  Utils::sleep(sleepTime);
-  print("Process::run(); PID: " + to_string(this->PID) + "; execution time: " + to_string(sleepTime));
-}
-
-/**
  * @brief Aumenta o valor da prioridade do processo. Caso sua prioriadade 
  *        seja 0 ou maior ou igual a 3, mantem o valor.
  */

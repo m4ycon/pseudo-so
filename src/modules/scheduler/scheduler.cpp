@@ -39,7 +39,7 @@ Process *Scheduler::getNextProcess()
   std::lock_guard<std::mutex> lock(schedulerMutex);
 
   // check if there is any process in the ready queue
-  while (!readyQueue.empty()) {
+  for (int i = 0; i < (int) readyQueue.size(); i++) {
     auto process = readyQueue.front();
     readyQueue.pop();
     this->addProcess(process);
