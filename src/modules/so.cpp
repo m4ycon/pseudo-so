@@ -17,11 +17,11 @@ SO::SO(string processes_path, string files_path)
   
   auto [fileManager, processesToArrive] = fileReader->setup(processes_path, files_path, scheduler);
   this->fileManager = fileManager;
-  this->processesToArrive = processesToArrive;
+  this->numProcessesToArrive = processesToArrive.size();
 
   this->cpu = new CPU(this->fileManager, this->startTime);
 
-  for (auto process : this->processesToArrive) {
+  for (auto process : processesToArrive) {
     thread t(&SO::deliverProcess, this, process);
     t.detach();
   }
@@ -35,7 +35,7 @@ void SO::exec()
 {
   auto processes_finished = 0;
 
-  while (processes_finished < (int) this->processesToArrive.size()) {
+  while (processes_finished < numProcessesToArrive) {
     auto process = this->scheduler->getNextProcess();
     if (process == nullptr) continue;
 
@@ -104,6 +104,7 @@ void SO::deliverProcess(Process *process)
   Utils::sleep(process->getStartupTime());
   if (!this->isThereEnoughResources(process)) {
     print("Não há recursos suficientes para o processo " + to_string(process->getPID()) + ".");
+    numProcessesToArrive--;
     return;
   }
 

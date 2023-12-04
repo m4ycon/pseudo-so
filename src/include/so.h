@@ -23,7 +23,7 @@ private:
   Scheduler *scheduler;
 
   TimePoint startTime;
-  vector<Process *> processesToArrive;
+  int numProcessesToArrive;
 
   std::mutex gettingProcessResourcesMutex;
 
